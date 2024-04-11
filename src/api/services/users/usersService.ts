@@ -1,18 +1,18 @@
 import UsersRepository from "../../repositories/users/usersRepository";
 
-const REPOSITORY = new UsersRepository();
+const repository = new UsersRepository();
 
 class UsersService {
 	async getAllUsers() {
-		return await REPOSITORY.getAllUsers();
+		return await repository.getAllUsers();
 	}
 
-	async getUser(email: string) {
+	async getUserByEmail(email: string) {
 		if (email === "") {
 			throw new Error("Para atualizar um usuário, o email deve ser informado.");
 		}
 
-		const user = await REPOSITORY.getUser(email);
+		const user = await repository.getUserByEmail(email);
 
 		if (!user) {
 			throw new Error("Usuário não encontrado.");
@@ -25,7 +25,14 @@ class UsersService {
 		if (name === "" || email === "") {
 			throw new Error("Para criar um usuário, o nome e o email devem ser informados.");
 		}
-		return await REPOSITORY.createUser(name, email);
+
+		const user = await repository.getUserByEmail(email);
+
+		if (user) {
+			throw new Error("Já existe um usuário com este email.");
+		}
+
+		return await repository.createUser(name, email);
 	}
 
 	async updateUser(id: string, name: string, email: string) {
@@ -33,20 +40,37 @@ class UsersService {
 			throw new Error("Para atualizar um usuário, nome e email devem ser informados.");
 		}
 
-        if(id === ""){
-            throw new Error("ID do usuário não informado.");
-        }
+		if (id === "") {
+			throw new Error("ID do usuário não informado.");
+		}
 
-		return await REPOSITORY.updateUser(id, name, email);
+		const user = await repository.getUserById(id);
+		console.log(user);
+
+		if (!user) {
+			throw new Error("Usuário não encontrado.");
+		}
+
+		if(user.id !== id) {
+			throw new Error("Já existe um usuário com este email.");
+		}
+
+		return await repository.updateUser(id, name, email);
 	}
 
-    async deleteUser(id: string) {
-        if(id === ""){
-            throw new Error("ID do usuário não informado.");
-        }
+	async deleteUser(id: string) {
+		if (id === "") {
+			throw new Error("ID do usuário não informado.");
+		}
 
-        await REPOSITORY.deleteUser(id);
-    }
+		const user = await repository.getUserById(id);
+
+		if (!user) {
+			throw new Error("Usuário não encontrado.");
+		}
+
+		await repository.deleteUser(id);
+	}
 }
 
 export default UsersService;

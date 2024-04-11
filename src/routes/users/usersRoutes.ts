@@ -1,16 +1,16 @@
 import { FastifyInstance, FastifyPluginOptions } from "fastify";
 import UsersController from "../../api/controllers/users/usersController";
 
-const CONTROLLER = new UsersController();
+const controller = new UsersController();
 
 export async function userRoutes(fastify: FastifyInstance, options: FastifyPluginOptions) {
-	fastify.get("/users", CONTROLLER.getAllUsers);
+	fastify.get("/users", controller.getAllUsers);
 
-	fastify.get("/users/:email", CONTROLLER.getUser);
+	fastify.get("/users/:email", controller.getUserByEmail);
 
-	fastify.post("/users", CONTROLLER.createUser);
+	fastify.post("/users", controller.createUser);
 
-	fastify.put("/users/:id", CONTROLLER.updateUser);
+	fastify.put("/users/:id", controller.updateUser);
 
-	fastify.delete("/users/:id", CONTROLLER.deleteUser);
+	fastify.delete("/users/:id", controller.deleteUser);
 }

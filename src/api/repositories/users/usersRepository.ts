@@ -7,10 +7,20 @@ class UsersRepository {
 		return users;
 	}
 
-	async getUser(email: string) {
+	async getUserByEmail(email: string) {
 		const user = await prismaClient.users.findUnique({
 			where: {
 				email,
+			},
+		});
+
+		return user;
+	}
+
+	async getUserById(id: string) {
+		const user = await prismaClient.users.findUnique({
+			where: {
+				id,
 			},
 		});
 
@@ -38,6 +48,7 @@ class UsersRepository {
 				name,
 				email,
 				status: true,
+				update_at: new Date(),
 			},
 		});
 
