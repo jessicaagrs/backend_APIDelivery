@@ -21,3 +21,8 @@ model Users {
   created_at DateTime? @default(now())
   update_at DateTime? @default(now())
 }
+
+model PaymentsMethods {
+  id String @id @default(cuid())
+  description String
+}
