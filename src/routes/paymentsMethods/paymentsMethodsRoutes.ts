@@ -8,7 +8,7 @@ export async function paymentsMethodsRoutes(fastify: FastifyInstance, options: F
 
 	fastify.post("/paymentsmethods", controller.createPaymentMethod);
 
-	fastify.put("/paymentsmethods/:id", controller.updatePaymentMethod);
+	fastify.put("/paymentsmethods", controller.updatePaymentMethod);
 
 	fastify.delete("/paymentsmethods/:id", controller.deletePaymentMethod);
 }

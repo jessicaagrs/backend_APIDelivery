@@ -26,3 +26,13 @@ model PaymentsMethods {
   id          String @id @default(cuid())
   description String
 }
+
+model Shopmans {
+  id         String    @id @default(cuid())
+  name       String
+  email      String    @unique
+  role       String
+  status     Boolean
+  created_at DateTime? @default(now())
+  update_at  DateTime? @default(now())
+}

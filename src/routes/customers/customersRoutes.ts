@@ -10,7 +10,7 @@ export async function customersRoutes(fastify: FastifyInstance, options: Fastify
 
 	fastify.post("/customers", controller.createCustomer);
 
-	fastify.put("/customers/:id", controller.updateCustomer);
+	fastify.put("/customers", controller.updateCustomer);
 
 	fastify.delete("/customers/:id", controller.deleteCustomer);
 }

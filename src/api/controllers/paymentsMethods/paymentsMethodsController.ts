@@ -6,12 +6,12 @@ import PaymentsMethodsService from "../../services/paymentsMethods/paymentsMetho
 const service = new PaymentsMethodsService();
 
 const paramsSchema = z.object({
-	id: z.string(),
+	id: z.string().nullish(),
 	description: z.string(),
 });
 
 const paramsDescriptionSchema = z.object({
-	description: z.string(),
+	description: z.string()
 });
 
 const paramsIdSchema = z.string();
@@ -44,9 +44,8 @@ class PaymentsMethodsController {
 
 	async updatePaymentMethod(request: FastifyRequest<{ Params: ParamsType }>, reply: FastifyReply) {
 		try {
-			const id = paramsIdSchema.parse(request.params.id);
-			const { description } = paramsDescriptionSchema.parse(request.body);
-			await service.updatePaymentMethod(description, id);
+			const { id, description } = paramsSchema.parse(request.body);
+			await service.updatePaymentMethod(description, id ?? "");
 			return reply.status(200).send("Forma de pagamento atualizada com sucesso.");
 		} catch (error: any) {
 			const statusCode = reply.statusCode || 500;

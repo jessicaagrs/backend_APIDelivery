@@ -129,5 +129,6 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
-testsUsers.http
+testsCustomers.http
 testsPaymentsMethods.http
+testsShopmansMethods.http
