@@ -28,19 +28,17 @@ class CustomersRepository {
 	}
 
 	async createCustomer(name: string, email: string) {
-		const user = await prismaClient.customers.create({
+		await prismaClient.customers.create({
 			data: {
 				name,
 				email,
 				status: true,
 			},
 		});
-
-		return user;
 	}
 
 	async updateCustomer(id: string, name: string, email: string) {
-		const user = await prismaClient.customers.update({
+		await prismaClient.customers.update({
 			where: {
 				id,
 			},
@@ -51,8 +49,6 @@ class CustomersRepository {
 				update_at: new Date(),
 			},
 		});
-
-		return user;
 	}
 
 	async deleteCustomer(id: string) {

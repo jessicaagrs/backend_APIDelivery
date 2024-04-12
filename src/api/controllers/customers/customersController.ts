@@ -44,9 +44,9 @@ class CustomersController {
 	async createCustomer(request: FastifyRequest, reply: FastifyReply) {
 		try {
 			const { name, email } = paramsSchema.parse(request.body);
-			const customer = await service.createCustomer(name, email);
+			await service.createCustomer(name, email);
 
-			return reply.status(201).send(customer);
+			reply.status(201).send("Cliente criado com sucesso.");
 		} catch (error: any) {
 			const statusCode = reply.statusCode || 500;
 			const err = new ApiError(statusCode, error.message);
@@ -58,9 +58,9 @@ class CustomersController {
 		try {
 			const id = paramsIdSchema.parse(request.params.id);
 			const { name, email } = paramsSchema.parse(request.body);
-			const customer = await service.updateCustomer(id, name, email);
+			await service.updateCustomer(id, name, email);
 
-			return reply.send(customer);
+			return reply.send("Cliente atualizado com sucesso.");
 		} catch (error: any) {
 			const statusCode = reply.statusCode || 500;
 			const err = new ApiError(statusCode, error.message);
@@ -73,7 +73,7 @@ class CustomersController {
 			const id = paramsIdSchema.parse(request.params.id);
 			await service.deleteCustomer(id);
 
-			return reply.status(200).send(`Usuário ${id} deletado com sucesso.`);
+			return reply.status(200).send(`Cliente [${id}] deletado com sucesso.`);
 		} catch (error: any) {
 			const statusCode = reply.statusCode || 500;
 			const err = new ApiError(statusCode, error.message);
