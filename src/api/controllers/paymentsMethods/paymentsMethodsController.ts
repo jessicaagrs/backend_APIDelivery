@@ -11,7 +11,7 @@ const paramsSchema = z.object({
 });
 
 const paramsDescriptionSchema = z.object({
-	description: z.string()
+	description: z.string(),
 });
 
 const paramsIdSchema = z.string();

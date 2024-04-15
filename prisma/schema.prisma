@@ -36,3 +36,11 @@ model Shopmans {
   created_at DateTime? @default(now())
   update_at  DateTime? @default(now())
 }
+
+model Products {
+  id          String  @id @default(cuid())
+  description String
+  price       Decimal @db.Decimal(10, 2)
+  urlImage    String
+  type        String
+}

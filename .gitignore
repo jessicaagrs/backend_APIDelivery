@@ -132,3 +132,4 @@ dist
 testsCustomers.http
 testsPaymentsMethods.http
 testsShopmansMethods.http
+testsProducts.http

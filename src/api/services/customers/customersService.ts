@@ -1,4 +1,4 @@
-import CustomersRepository from "../../repositories/customers/usersRepository";
+import CustomersRepository from "../../repositories/customers/customersRepository";
 
 const repository = new CustomersRepository();
 
