@@ -44,3 +44,14 @@ model Products {
   urlImage    String
   type        String
 }
+
+model Orders {
+  id               String    @id @default(cuid())
+  customer_id      String
+  shopman_id       String
+  paymentMethod_id String
+  value            Decimal   @db.Decimal(10, 2)
+  status           String
+  created_at       DateTime? @default(now())
+  update_at        DateTime? @default(now())
+}

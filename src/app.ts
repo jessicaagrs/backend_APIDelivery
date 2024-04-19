@@ -3,10 +3,12 @@ import { paymentsMethodsRoutes } from "./routes/paymentsMethods/paymentsMethodsR
 import { customersRoutes } from "./routes/customers/customersRoutes";
 import { shopmansRoutes } from "./routes/shopmans/shopmansRoutes";
 import { productsRoutes } from "./routes/products/productsRoutes";
+import { ordersRoutes } from "./routes/orders/ordersRoutes";
 
 export async function routes(fastify: FastifyInstance, options: FastifyPluginOptions) {
 	fastify.register(customersRoutes);
 	fastify.register(paymentsMethodsRoutes);
 	fastify.register(shopmansRoutes);
 	fastify.register(productsRoutes);
+	fastify.register(ordersRoutes);
 }
