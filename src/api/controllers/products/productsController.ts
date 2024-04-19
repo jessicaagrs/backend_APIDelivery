@@ -2,7 +2,7 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 import { ApiError } from "../../../error/apiError";
 import ProductsService from "../../services/products/productsService";
-import { TypeProductEnum } from "../../../enums/roleEnum";
+import { TypeProductEnum } from "../../../enums/enums";
 
 const service = new ProductsService();
 
@@ -30,9 +30,9 @@ class ProductsController {
 		}
 	}
 
-    async getProductById(request: FastifyRequest<{ Params: ParamsType }>, reply: FastifyReply) {
+	async getProductById(request: FastifyRequest<{ Params: ParamsType }>, reply: FastifyReply) {
 		try {
-            const id = paramsIdSchema.parse(request.params.id);
+			const id = paramsIdSchema.parse(request.params.id);
 			const product = await service.getProductById(id);
 			return reply.send(product);
 		} catch (error: any) {
@@ -45,7 +45,7 @@ class ProductsController {
 	async createProduct(request: FastifyRequest, reply: FastifyReply) {
 		try {
 			const { description, price, type, urlImage } = paramsSchema.parse(request.body);
-			if (type != TypeProductEnum.ALIMENTOS && type != TypeProductEnum.BEBIDAS) {
+			if (type != TypeProductEnum.FOODS && type != TypeProductEnum.DRINKS) {
 				throw new Error("Tipo de produto inválido.");
 			}
 
@@ -61,7 +61,7 @@ class ProductsController {
 	async updateProduct(request: FastifyRequest, reply: FastifyReply) {
 		try {
 			const { id, description, price, type, urlImage } = paramsSchema.parse(request.body);
-			if (type != TypeProductEnum.ALIMENTOS && type != TypeProductEnum.BEBIDAS) {
+			if (type != TypeProductEnum.FOODS && type != TypeProductEnum.DRINKS) {
 				throw new Error("Tipo de produto inválido.");
 			}
 

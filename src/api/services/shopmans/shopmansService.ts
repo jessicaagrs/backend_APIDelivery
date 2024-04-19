@@ -1,4 +1,4 @@
-import { RoleEnum } from "../../../enums/roleEnum";
+import { RoleEnum } from "../../../enums/enums";
 import ShopmansRepository from "../../repositories/shopmans/shopmansRepository";
 
 const repository = new ShopmansRepository();
@@ -63,7 +63,7 @@ class ShopmansService {
 			);
 		}
 
-        if (role !== RoleEnum.ADMIN && role !== RoleEnum.USER) {
+		if (role !== RoleEnum.ADMIN && role !== RoleEnum.USER) {
 			throw new Error("O tipo de autorização deve ser Admin ou Usuario.");
 		}
 
