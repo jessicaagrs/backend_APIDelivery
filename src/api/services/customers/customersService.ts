@@ -7,8 +7,8 @@ class CustomersService {
 		return await repository.getAllCustomers();
 	}
 
-	async getCustomerByEmail(email: string) {
-		if (email === "") {
+	async getCustomerByEmail(email: string | undefined) {
+		if (email === undefined) {
 			throw new Error("Para atualizar um cliente, o email deve ser informado.");
 		}
 
@@ -21,8 +21,8 @@ class CustomersService {
 		return customer;
 	}
 
-	async createCustomer(name: string, email: string) {
-		if (name === "" || email === "") {
+	async createCustomer(name: string | undefined, email: string | undefined) {
+		if (name === undefined || email === undefined) {
 			throw new Error("Para criar um cliente, o nome e o email devem ser informados.");
 		}
 
@@ -57,8 +57,8 @@ class CustomersService {
 		await repository.updateCustomer(id, name, email);
 	}
 
-	async deleteCustomer(id: string) {
-		if (id === "") {
+	async deleteCustomer(id: string | undefined) {
+		if (id === undefined) {
 			throw new Error("ID do cliente não informado.");
 		}
 
