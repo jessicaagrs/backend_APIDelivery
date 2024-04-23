@@ -9,3 +9,7 @@ export function validarStatus(status: string): boolean {
 
 	return false;
 }
+
+export function validateProductType(tipoProduto: string): boolean {
+	return tipoProduto === "Alimentos" || tipoProduto === "Bebidas";
+}
