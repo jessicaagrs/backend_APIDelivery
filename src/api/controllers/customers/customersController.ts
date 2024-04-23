@@ -8,6 +8,8 @@ const paramsSchema = z.object({
 	id: z.string({
 		required_error: "O id do cliente é obrigatório",
 		invalid_type_error: "O id do cliente deve ser uma string",
+	}).min(1, {
+		message: "O id do cliente não pode ser vazio",
 	}),
 	name: z
 		.string({

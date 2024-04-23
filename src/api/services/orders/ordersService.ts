@@ -1,5 +1,4 @@
 import { StatusOrdersEnum } from "../../../enums/enums";
-import { validarStatus } from "../../../utils/formatter";
 import CustomersRepository from "../../repositories/customers/customersRepository";
 import OrdersRepository from "../../repositories/orders/ordersRepository";
 import PaymentsMethodsRepository from "../../repositories/paymentsMethods/paymentsMethodsRepository";
@@ -22,7 +21,6 @@ class OrdersService {
 
 	async getOrdersByStatus(status: string | undefined) {
 		if (status == undefined) throw new Error("O status do pedido é obrigatório");
-		if (!validarStatus(status)) throw new Error("O status informado não é válido");
 		return await repository.getOrdersByStatus(status);
 	}
 
@@ -59,8 +57,8 @@ class OrdersService {
 
 		if (status == undefined) throw new Error("O status do pedido é obrigatório");
 
-		if (!validarStatus(status) && status != StatusOrdersEnum.PENDING)
-			throw new Error("O status não é válido ou é diferente de Pendente");
+		if (status != StatusOrdersEnum.PENDING)
+			throw new Error("Não é possível atualizar pedido com status diferente de Pendente");
 
 		let order = await repository.getOrderById(id);
 		if (order == null) throw new Error("Não existe um pedido com o ID informado");
@@ -90,8 +88,6 @@ class OrdersService {
 		if (value == undefined) throw new Error("O valor total do pedido é obrigatório");
 
 		if (status == undefined) throw new Error("O status do pedido é obrigatório");
-
-		if (!validarStatus(status)) throw new Error("O status informado não é válido");
 
 		let order = await repository.getOrderById(id);
 		if (order == null) throw new Error("Não existe um pedido com o ID informado");

@@ -2,6 +2,7 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 import { ApiError } from "../../../error/apiError";
 import OrdersService from "../../services/orders/ordersService";
+import { validateStatusOrders } from "../../../utils/formatter";
 
 const service = new OrdersService();
 
@@ -15,8 +16,8 @@ const paramsSchema = z.object({
 	status: z.string({
 		required_error: "O status do pedido é obrigatório",
 		invalid_type_error: "O status do pedido deve ser uma string",
-	}).min(1, {
-		message: "O status do pedido não pode ser vazio",
+	}).refine((value) => validateStatusOrders(value), {
+		message: "O status do pedido está incorreto, por favor utilize Pendente, Cancelado, Em Andamento ou Concluido",
 	}),
 	shopmanId: z.string({
 		required_error: "O id do vendedor é obrigatório",
