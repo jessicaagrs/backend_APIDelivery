@@ -24,8 +24,8 @@ class ShopmansService {
 		return shopman;
 	}
 
-	async getShopmanByEmail(email: string) {
-		if (email === "") {
+	async getShopmanByEmail(email: string | undefined) {
+		if (email === undefined) {
 			throw new Error("O email do lojista deve ser informado.");
 		}
 
@@ -38,13 +38,9 @@ class ShopmansService {
 		return shopman;
 	}
 
-	async createShopman(name: string, email: string, role: string) {
-		if (name === "" || email === "" || role === "") {
+	async createShopman(name: string | undefined, email: string | undefined, role: string | undefined) {
+		if (name === undefined || email === undefined || role === undefined) {
 			throw new Error("Para criar um lojista, o nome, email e qual o tipo de autorização devem ser informados.");
-		}
-
-		if (role !== RoleEnum.ADMIN && role !== RoleEnum.USER) {
-			throw new Error("O tipo de autorização deve ser Admin ou Usuario.");
 		}
 
 		const shopman = await repository.getShopmanByEmail(email);
@@ -56,15 +52,16 @@ class ShopmansService {
 		await repository.createShopman(name, email, role);
 	}
 
-	async updateShopman(id: string, name: string, email: string, role: string) {
-		if (name === "" || email === "" || role === "" || id === "") {
+	async updateShopman(
+		id: string | undefined,
+		name: string | undefined,
+		email: string | undefined,
+		role: string | undefined
+	) {
+		if (name === undefined || email === undefined || role === undefined || id === undefined) {
 			throw new Error(
 				"Para atualizar um lojista, o nome, email, qual o tipo de autorização e o id devem ser informados."
 			);
-		}
-
-		if (role !== RoleEnum.ADMIN && role !== RoleEnum.USER) {
-			throw new Error("O tipo de autorização deve ser Admin ou Usuario.");
 		}
 
 		const shopman = await repository.getShopmanById(id);
@@ -80,8 +77,8 @@ class ShopmansService {
 		await repository.updateShopman(id, name, email, role);
 	}
 
-	async deleteShopman(id: string) {
-		if (id === "") {
+	async deleteShopman(id: string | undefined) {
+		if (id === undefined) {
 			throw new Error("ID do lojista não informado.");
 		}
 

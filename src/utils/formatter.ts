@@ -1,4 +1,4 @@
-import { StatusOrdersEnum } from "../enums/enums";
+import { RoleEnum, StatusOrdersEnum, TypeProductEnum } from "../enums/enums";
 
 export function validateStatusOrders(status: string): boolean {
 	for (const value in StatusOrdersEnum) {
@@ -10,6 +10,20 @@ export function validateStatusOrders(status: string): boolean {
 	return false;
 }
 
-export function validateProductType(tipoProduto: string): boolean {
-	return tipoProduto === "Alimentos" || tipoProduto === "Bebidas";
+export function validateProductType(typeProduct: string): boolean {
+	for (const value in TypeProductEnum) {
+		if (TypeProductEnum[value as keyof typeof TypeProductEnum] === typeProduct) {
+			return true;
+		}
+	}
+	return false;
+}
+
+export function validateRole(typeRole: string): boolean {
+	for (const value in RoleEnum) {
+		if (RoleEnum[value as keyof typeof RoleEnum] === typeRole) {
+			return true;
+		}
+	}
+	return false;
 }
