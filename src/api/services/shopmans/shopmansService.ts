@@ -1,7 +1,8 @@
-import { RoleEnum } from "../../../enums/enums";
+import OrdersRepository from "../../repositories/orders/ordersRepository";
 import ShopmansRepository from "../../repositories/shopmans/shopmansRepository";
 
 const repository = new ShopmansRepository();
+const repositoryOrders = new OrdersRepository();
 
 class ShopmansService {
 	async getAllShopmans() {
@@ -86,6 +87,12 @@ class ShopmansService {
 
 		if (!shopman) {
 			throw new Error("Lojista não encontrado.");
+		}
+
+		const shopmanInOrder = await repositoryOrders.getOrderByShopman(shopman.id);
+
+		if (shopmanInOrder) {
+			throw new Error("Lojista não pode ser deletado, pois está vinculado a um pedido.");
 		}
 
 		await repository.deleteShopman(id);
