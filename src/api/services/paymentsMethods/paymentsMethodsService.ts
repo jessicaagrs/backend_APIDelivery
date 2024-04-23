@@ -14,16 +14,16 @@ class PaymentsMethodsService {
 		return payments;
 	}
 
-	async createPaymentMethod(description: string) {
-		if (description === "") {
+	async createPaymentMethod(description: string | undefined) {
+		if (description === undefined) {
 			throw new Error("Para criar um método de pagamento, a descrição deve ser informada.");
 		}
 
 		await repository.createPaymentMethod(description);
 	}
 
-	async updatePaymentMethod(description: string, id: string) {
-		if (description === "" || id === "") {
+	async updatePaymentMethod(description: string | undefined, id: string | undefined) {
+		if (description === undefined || id === undefined) {
 			throw new Error("Para atualizar um método de pagamento, a descrição e o id devem ser informados.");
 		}
 
@@ -36,8 +36,8 @@ class PaymentsMethodsService {
 		await repository.updatePaymentMethod(id, description);
 	}
 
-	async deletePaymentMethod(id: string) {
-		if (id === "") {
+	async deletePaymentMethod(id: string | undefined) {
+		if (id === undefined) {
 			throw new Error("ID do método de pagamento não informado.");
 		}
 

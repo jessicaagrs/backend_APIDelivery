@@ -6,15 +6,23 @@ import PaymentsMethodsService from "../../services/paymentsMethods/paymentsMetho
 const service = new PaymentsMethodsService();
 
 const paramsSchema = z.object({
-	id: z.string().nullish(),
-	description: z.string(),
+	id: z
+		.string({
+			required_error: "O id do método de pagamento é obrigatório",
+			invalid_type_error: "O id do método de pagamento deve ser uma string",
+		})
+		.min(1, {
+			message: "O id do método de pagamento não pode ser vazio",
+		}),
+	description: z
+		.string({
+			required_error: "A descrição do método de pagamento é obrigatório",
+			invalid_type_error: "A descrição do método de pagamento deve ser uma string",
+		})
+		.min(5, {
+			message: "A descrição do  método de pagamento deve ter pelo menos 5 caracteres",
+		}),
 });
-
-const paramsDescriptionSchema = z.object({
-	description: z.string(),
-});
-
-const paramsIdSchema = z.string();
 
 type ParamsType = z.infer<typeof paramsSchema>;
 
@@ -30,9 +38,9 @@ class PaymentsMethodsController {
 		}
 	}
 
-	async createPaymentMethod(request: FastifyRequest, reply: FastifyReply) {
+	async createPaymentMethod(request: FastifyRequest<{ Params: Partial<ParamsType> }>, reply: FastifyReply) {
 		try {
-			const { description } = paramsDescriptionSchema.parse(request.body);
+			const { description } = paramsSchema.partial().parse(request.body);
 			await service.createPaymentMethod(description);
 			return reply.status(201).send("Forma de pagamento criada com sucesso.");
 		} catch (error: any) {
@@ -42,10 +50,10 @@ class PaymentsMethodsController {
 		}
 	}
 
-	async updatePaymentMethod(request: FastifyRequest<{ Params: ParamsType }>, reply: FastifyReply) {
+	async updatePaymentMethod(request: FastifyRequest<{ Params: Partial<ParamsType> }>, reply: FastifyReply) {
 		try {
-			const { id, description } = paramsSchema.parse(request.body);
-			await service.updatePaymentMethod(description, id ?? "");
+			const { id, description } = paramsSchema.partial().parse(request.body);
+			await service.updatePaymentMethod(description, id);
 			return reply.status(200).send("Forma de pagamento atualizada com sucesso.");
 		} catch (error: any) {
 			const statusCode = reply.statusCode || 500;
@@ -54,9 +62,9 @@ class PaymentsMethodsController {
 		}
 	}
 
-	async deletePaymentMethod(request: FastifyRequest<{ Params: ParamsType }>, reply: FastifyReply) {
+	async deletePaymentMethod(request: FastifyRequest<{ Params: Partial<ParamsType> }>, reply: FastifyReply) {
 		try {
-			const id = paramsIdSchema.parse(request.params.id);
+			const id = paramsSchema.partial().parse(request.params).id;
 			await service.deletePaymentMethod(id);
 			return reply.status(200).send(`Forma de pagamento [${id}] excluída com sucesso.`);
 		} catch (error: any) {

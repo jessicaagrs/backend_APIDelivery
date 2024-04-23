@@ -7,10 +7,10 @@ const service = new OrdersService();
 
 const paramsSchema = z.object({
 	id: z.string({
-		required_error: "O id do cliente é obrigatório",
-		invalid_type_error: "O id do cliente deve ser uma string",
+		required_error: "O id do pedido é obrigatório",
+		invalid_type_error: "O id do pedido deve ser uma string",
 	}).min(1, {
-		message: "O id do cliente não pode ser vazio",
+		message: "O id do pedido não pode ser vazio",
 	}),
 	status: z.string({
 		required_error: "O status do pedido é obrigatório",
