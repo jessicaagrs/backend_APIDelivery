@@ -20,6 +20,7 @@
     "@fastify/swagger": "^8.14.0",
     "@fastify/swagger-ui": "^3.0.0",
     "@prisma/client": "^5.14.0",
+    "@sinclair/typebox": "^0.32.30",
     "fastify": "^4.26.2",
     "tsx": "^4.7.2",
     "zod": "^3.22.4"

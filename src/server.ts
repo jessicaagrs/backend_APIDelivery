@@ -7,7 +7,19 @@ import swaggerUI from "@fastify/swagger-ui";
 const app = Fastify({ logger: true });
 
 const start = async () => {
-	await app.register(swagger);
+	await app.register(swagger, {
+		openapi: {
+			info: {
+				title: "API Delivery",
+				description: "API developed by JessAg",
+				version: "0.0.1",
+			},
+			externalDocs: {
+				url: "https://github.com/jessicaagrs/backend_APIDelivery",
+				description: "Find more info here",
+			},
+		}
+	});
 	await app.register(swaggerUI, {
 		routePrefix: "/",
 	});
@@ -16,7 +28,7 @@ const start = async () => {
 
 	try {
 		await app.listen({ port: 3333 });
-	} catch (err) {
+	} catch (err) {												
 		app.log.error(err);
 		process.exit(1);
 	}

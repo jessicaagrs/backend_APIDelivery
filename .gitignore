@@ -134,3 +134,4 @@ testsPaymentsMethods.http
 testsShopmans.http
 testsProducts.http
 testsOrders.http
+.vscode/extensions.json
