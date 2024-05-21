@@ -5,12 +5,14 @@ import CustomersService from "../../services/customers/customersService";
 
 const service = new CustomersService();
 const paramsSchema = z.object({
-	id: z.string({
-		required_error: "O id do cliente é obrigatório",
-		invalid_type_error: "O id do cliente deve ser uma string",
-	}).min(1, {
-		message: "O id do cliente não pode ser vazio",
-	}),
+	id: z
+		.string({
+			required_error: "O id do cliente é obrigatório",
+			invalid_type_error: "O id do cliente deve ser uma string",
+		})
+		.min(1, {
+			message: "O id do cliente não pode ser vazio",
+		}),
 	name: z
 		.string({
 			required_error: "O nome do cliente é obrigatório",
