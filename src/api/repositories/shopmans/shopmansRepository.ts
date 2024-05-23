@@ -38,7 +38,7 @@ class ShopmansRepository {
 		});
 	}
 
-	async updateShopman(id: string, name: string, email: string, role: string) {
+	async updateShopman(id: string, name: string, email: string, role: string, status: boolean) {
 		await prismaClient.shopmans.update({
 			where: {
 				id,
@@ -47,7 +47,7 @@ class ShopmansRepository {
 				name,
 				email,
 				role,
-				status: true,
+				status,
 				updateAt: new Date(),
 			},
 		});

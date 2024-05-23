@@ -28,6 +28,10 @@ const paramsSchema = z.object({
 		.email({
 			message: "O email do cliente deve ser em um formato de email válido",
 		}),
+	status: z.boolean({
+		required_error: "O status do cliente é obrigatório",
+		invalid_type_error: "O cargo do vendedor deve ser false ou true",
+	}),
 });
 
 type ParamsType = z.infer<typeof paramsSchema>;
@@ -70,8 +74,8 @@ class CustomersController {
 
 	async updateCustomer(request: FastifyRequest<{ Params: ParamsType }>, reply: FastifyReply) {
 		try {
-			const { id, name, email } = paramsSchema.parse(request.body);
-			await service.updateCustomer(id, name, email);
+			const { id, name, email, status } = paramsSchema.parse(request.body);
+			await service.updateCustomer(id, name, email, status);
 			return reply.send("Cliente atualizado com sucesso.");
 		} catch (error: any) {
 			const statusCode = reply.statusCode || 500;

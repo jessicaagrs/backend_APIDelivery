@@ -39,6 +39,10 @@ const paramsSchema = z.object({
 		.refine((value) => validateRole(value), {
 			message: "A permissão do vendedor deve ser um dos seguintes valores:'Admin' ou 'Usuario'",
 		}),
+	status: z.boolean({
+		required_error: "O status do vendedor é obrigatório",
+		invalid_type_error: "O cargo do vendedor deve ser false ou true",
+	}),
 });
 type ParamsType = z.infer<typeof paramsSchema>;
 
@@ -70,7 +74,7 @@ class ShopmansController {
 		try {
 			const { name, email, role } = paramsSchema.partial().parse(request.body);
 			await service.createShopman(name, email, role);
-			return reply.status(201).send("Lojista criado com sucesso.");
+			return reply.status(201).send("Vendedor criado com sucesso.");
 		} catch (error: any) {
 			const statusCode = reply.statusCode || 500;
 			const err = new ApiError(statusCode, error.message);
@@ -80,9 +84,9 @@ class ShopmansController {
 
 	async updateShopman(request: FastifyRequest<{ Params: Partial<ParamsType> }>, reply: FastifyReply) {
 		try {
-			const { id, name, email, role } = paramsSchema.partial().parse(request.body);
-			await service.updateShopman(id, name, email, role);
-			return reply.status(200).send("Lojista atualizado com sucesso.");
+			const { id, name, email, role, status } = paramsSchema.partial().parse(request.body);
+			await service.updateShopman(id, name, email, role, status);
+			return reply.status(200).send("Vendedor atualizado com sucesso.");
 		} catch (error: any) {
 			const statusCode = reply.statusCode || 500;
 			const err = new ApiError(statusCode, error.message);
@@ -94,7 +98,7 @@ class ShopmansController {
 		try {
 			const id = paramsSchema.partial().parse(request.params).id;
 			await service.deleteShopman(id);
-			return reply.status(200).send(`Lojista [${id}] excluído com sucesso.`);
+			return reply.status(200).send(`Vendedor [${id}] excluído com sucesso.`);
 		} catch (error: any) {
 			const statusCode = reply.statusCode || 500;
 			const err = new ApiError(statusCode, error.message);

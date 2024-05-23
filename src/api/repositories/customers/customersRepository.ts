@@ -37,7 +37,7 @@ class CustomersRepository {
 		});
 	}
 
-	async updateCustomer(id: string, name: string, email: string) {
+	async updateCustomer(id: string, name: string, email: string, status: boolean) {
 		await prismaClient.customers.update({
 			where: {
 				id,
@@ -45,7 +45,7 @@ class CustomersRepository {
 			data: {
 				name,
 				email,
-				status: true,
+				status,
 				updateAt: new Date(),
 			},
 		});

@@ -35,7 +35,7 @@ class CustomersService {
 		await repository.createCustomer(name, email);
 	}
 
-	async updateCustomer(id: string, name: string, email: string) {
+	async updateCustomer(id: string, name: string, email: string, status: boolean) {
 		if (name === "" || email === "") {
 			throw new Error("Para atualizar um cliente, nome e email devem ser informados.");
 		}
@@ -56,7 +56,7 @@ class CustomersService {
 			throw new Error("Já existe um cliente com este email.");
 		}
 
-		await repository.updateCustomer(id, name, email);
+		await repository.updateCustomer(id, name, email, status);
 	}
 
 	async deleteCustomer(id: string | undefined) {
