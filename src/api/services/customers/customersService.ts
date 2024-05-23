@@ -50,7 +50,9 @@ class CustomersService {
 			throw new Error("Cliente não encontrado.");
 		}
 
-		if (customer.id !== id) {
+		const emailJaExiste = await repository.getCustomerByEmail(email);
+
+		if (emailJaExiste && emailJaExiste.id !== id) {
 			throw new Error("Já existe um cliente com este email.");
 		}
 

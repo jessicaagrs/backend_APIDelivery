@@ -1,6 +1,6 @@
 import { Type, type Static } from "@sinclair/typebox";
 
-const CustomersInsertSchema = Type.Object({
+const CustomerSchema = Type.Object({
 	id: Type.String(),
 	name: Type.String(),
 	email: Type.String(),
@@ -9,10 +9,12 @@ const CustomersInsertSchema = Type.Object({
 	update_at: Type.String(),
 });
 
-const CustomersUpdateSchema = Type.Omit(CustomersInsertSchema, ["id"]);
+const CustomerInsertSchema = Type.Pick(CustomerSchema, ["name", "email"]);
 
-const CustomersListSchema = Type.Array(CustomersInsertSchema);
+const CustomersUpdateSchema = Type.Omit(CustomerSchema, ["update_at"]);
+
+const CustomersListSchema = Type.Array(CustomerSchema);
 
 const CustomerMessageResponse = Type.Literal("Sucess Message");
 
-export { CustomerMessageResponse, CustomersUpdateSchema, CustomersInsertSchema, CustomersListSchema };
+export { CustomerMessageResponse, CustomerInsertSchema, CustomersUpdateSchema, CustomerSchema, CustomersListSchema };

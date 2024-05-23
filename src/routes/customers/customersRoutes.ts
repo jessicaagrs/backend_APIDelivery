@@ -1,7 +1,8 @@
 import { FastifyInstance, FastifyPluginOptions } from "fastify";
 import CustomersController from "../../api/controllers/customers/customersController";
 import {
-	CustomersInsertSchema,
+	CustomerSchema,
+	CustomerInsertSchema,
 	CustomersUpdateSchema,
 	CustomersListSchema,
 	CustomerMessageResponse,
@@ -43,7 +44,7 @@ export async function customersRoutes(fastify: FastifyInstance, options: Fastify
 					},
 				},
 				response: {
-					200: CustomersInsertSchema,
+					200: CustomerSchema,
 					400: ErrorSchema,
 					500: ErrorSchema,
 				},
@@ -58,9 +59,9 @@ export async function customersRoutes(fastify: FastifyInstance, options: Fastify
 			schema: {
 				description: "Add a new customer.",
 				tags: ["customers"],
-				body: CustomersInsertSchema,
+				body: CustomerInsertSchema,
 				response: {
-					200: CustomerMessageResponse,
+					201: CustomerMessageResponse,
 					400: ErrorSchema,
 					500: ErrorSchema,
 				},

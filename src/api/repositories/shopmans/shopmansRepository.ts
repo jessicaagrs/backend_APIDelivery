@@ -48,7 +48,7 @@ class ShopmansRepository {
 				email,
 				role,
 				status: true,
-				update_at: new Date(),
+				updateAt: new Date(),
 			},
 		});
 	}

@@ -46,7 +46,7 @@ class CustomersRepository {
 				name,
 				email,
 				status: true,
-				update_at: new Date(),
+				updateAt: new Date(),
 			},
 		});
 	}

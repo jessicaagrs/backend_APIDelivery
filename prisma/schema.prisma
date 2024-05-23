@@ -18,8 +18,8 @@ model Customers {
   name       String
   email      String    @unique
   status     Boolean
-  created_at DateTime? @default(now())
-  update_at  DateTime? @default(now())
+  createdAt DateTime? @default(now())
+  updateAt  DateTime? @default(now())
 }
 
 model PaymentsMethods {
@@ -33,8 +33,8 @@ model Shopmans {
   email      String    @unique
   role       String
   status     Boolean
-  created_at DateTime? @default(now())
-  update_at  DateTime? @default(now())
+  createdAt DateTime? @default(now())
+  updateAt  DateTime? @default(now())
 }
 
 model Products {
@@ -47,11 +47,11 @@ model Products {
 
 model Orders {
   id               String    @id @default(cuid())
-  customer_id      String
-  shopman_id       String
-  paymentMethod_id String
+  customerId      String
+  shopmanId       String
+  paymentMethodId String
   value            Decimal   @db.Decimal(10, 2)
   status           String
-  created_at       DateTime? @default(now())
-  update_at        DateTime? @default(now())
+  createdAt       DateTime? @default(now())
+  updateAt        DateTime? @default(now())
 }
