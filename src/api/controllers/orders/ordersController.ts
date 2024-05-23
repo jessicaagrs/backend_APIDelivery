@@ -7,42 +7,54 @@ import { validateStatusOrders } from "../../../utils/formatter";
 const service = new OrdersService();
 
 const paramsSchema = z.object({
-	id: z.string({
-		required_error: "O id do pedido é obrigatório",
-		invalid_type_error: "O id do pedido deve ser uma string",
-	}).min(1, {
-		message: "O id do pedido não pode ser vazio",
-	}),
-	status: z.string({
-		required_error: "O status do pedido é obrigatório",
-		invalid_type_error: "O status do pedido deve ser uma string",
-	}).refine((value) => validateStatusOrders(value), {
-		message: "O status do pedido está incorreto, por favor utilize Pendente, Cancelado, Em Andamento ou Concluido",
-	}),
-	shopmanId: z.string({
-		required_error: "O id do vendedor é obrigatório",
-		invalid_type_error: "O id do vendedor deve ser uma string",
-	}).min(1, {
-		message: "O id do vendedor não pode ser vazio",
-	}),
-	customerId: z.string({
-		required_error: "O id do cliente é obrigatório",
-		invalid_type_error: "O id do cliente deve ser uma string",
-	}).min(1, {
-		message: "O id do cliente não pode ser vazio",
-	}),
-	paymentMethodId: z.string({
-		required_error: "O id do método de pagamento é obrigatório",
-		invalid_type_error: "O id do método de pagamento deve ser uma string",
-	}).min(1, {
-		message: "O id do método de pagamento não pode ser vazio",
-	}),
-	value: z.number({
-		required_error: "O valor do pedido é obrigatório",
-		invalid_type_error: "O valor do pedido deve ser um número",
-	}).positive({
-		message: "O valor do pedido deve ser maior que 0",
-	})
+	id: z
+		.string({
+			required_error: "O id do pedido é obrigatório",
+			invalid_type_error: "O id do pedido deve ser uma string",
+		})
+		.min(1, {
+			message: "O id do pedido não pode ser vazio",
+		}),
+	status: z
+		.string({
+			required_error: "O status do pedido é obrigatório",
+			invalid_type_error: "O status do pedido deve ser uma string",
+		})
+		.refine((value) => validateStatusOrders(value), {
+			message: "O status do pedido está incorreto, por favor utilize Pendente, Cancelado, Em Andamento ou Concluido",
+		}),
+	shopmanId: z
+		.string({
+			required_error: "O id do vendedor é obrigatório",
+			invalid_type_error: "O id do vendedor deve ser uma string",
+		})
+		.min(1, {
+			message: "O id do vendedor não pode ser vazio",
+		}),
+	customerId: z
+		.string({
+			required_error: "O id do cliente é obrigatório",
+			invalid_type_error: "O id do cliente deve ser uma string",
+		})
+		.min(1, {
+			message: "O id do cliente não pode ser vazio",
+		}),
+	paymentMethodId: z
+		.string({
+			required_error: "O id do método de pagamento é obrigatório",
+			invalid_type_error: "O id do método de pagamento deve ser uma string",
+		})
+		.min(1, {
+			message: "O id do método de pagamento não pode ser vazio",
+		}),
+	value: z
+		.number({
+			required_error: "O valor do pedido é obrigatório",
+			invalid_type_error: "O valor do pedido deve ser um número",
+		})
+		.positive({
+			message: "O valor do pedido deve ser maior que 0",
+		}),
 });
 
 type ParamsType = z.infer<typeof paramsSchema>;
@@ -59,7 +71,7 @@ class OrdersController {
 		}
 	}
 
-	async getOrderById(request: FastifyRequest<{ Params: Partial<ParamsType>}>, reply: FastifyReply) {
+	async getOrderById(request: FastifyRequest<{ Params: Partial<ParamsType> }>, reply: FastifyReply) {
 		try {
 			const id = paramsSchema.partial().parse(request.params).id;
 			const order = await service.getOrderById(id);
@@ -97,8 +109,8 @@ class OrdersController {
 
 	async updateOrderByCustomer(request: FastifyRequest<{ Params: Partial<ParamsType> }>, reply: FastifyReply) {
 		try {
-			const { id, shopmanId, paymentMethodId, status, value } = paramsSchema.partial().parse(request.body);
-			await service.updateOrderByCustomer(id, shopmanId, paymentMethodId, status, value);
+			const { id, paymentMethodId, status, value } = paramsSchema.partial().parse(request.body);
+			await service.updateOrderByCustomer(id, paymentMethodId, status, value);
 			return reply.status(200).send("Pedido atualizado com sucesso.");
 		} catch (error: any) {
 			const statusCode = reply.statusCode || 500;
@@ -109,8 +121,8 @@ class OrdersController {
 
 	async updateOrderByShopman(request: FastifyRequest<{ Params: Partial<ParamsType> }>, reply: FastifyReply) {
 		try {
-			const { id, shopmanId, paymentMethodId, status, value } = paramsSchema.partial().parse(request.body);
-			await service.updateOrderByShopman(id, shopmanId, paymentMethodId, status, value);
+			const { id, shopmanId, status } = paramsSchema.partial().parse(request.body);
+			await service.updateOrderByShopman(id, shopmanId, status);
 			return reply.status(200).send("Pedido atualizado com sucesso.");
 		} catch (error: any) {
 			const statusCode = reply.statusCode || 500;
@@ -119,7 +131,10 @@ class OrdersController {
 		}
 	}
 
-	async deleteOrderByCustomer(request: FastifyRequest<{ Params: FastifyRequest<{ Params: Partial<ParamsType> }> }>, reply: FastifyReply) {
+	async deleteOrderByCustomer(
+		request: FastifyRequest<{ Params: FastifyRequest<{ Params: Partial<ParamsType> }> }>,
+		reply: FastifyReply
+	) {
 		try {
 			const id = paramsSchema.partial().parse(request.params).id;
 			await service.deleteOrderByCustomer(id);
@@ -131,7 +146,10 @@ class OrdersController {
 		}
 	}
 
-	async deleteOrderByShopman(request: FastifyRequest<{ Params: FastifyRequest<{ Params: Partial<ParamsType> }> }>, reply: FastifyReply) {
+	async deleteOrderByShopman(
+		request: FastifyRequest<{ Params: FastifyRequest<{ Params: Partial<ParamsType> }> }>,
+		reply: FastifyReply
+	) {
 		try {
 			const id = paramsSchema.partial().parse(request.params).id;
 			await service.deleteOrderByShopman(id);
