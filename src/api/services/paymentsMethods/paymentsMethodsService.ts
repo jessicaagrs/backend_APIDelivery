@@ -1,6 +1,8 @@
+import OrdersRepository from "../../repositories/orders/ordersRepository";
 import PaymentsMethodsRepository from "../../repositories/paymentsMethods/paymentsMethodsRepository";
 
 const repository = new PaymentsMethodsRepository();
+const repositoryOrders = new OrdersRepository();
 
 class PaymentsMethodsService {
 	async getAllPaymentsMethods() {
@@ -45,6 +47,12 @@ class PaymentsMethodsService {
 
 		if (!payment) {
 			throw new Error("Método de pagamento não encontrado.");
+		}
+
+		const paymentInOrder = await repositoryOrders.getOrderByPaymentMethod(payment.id);
+
+		if (paymentInOrder) {
+			throw new Error("Forma de pagamento não pode ser deletada, pois está vinculada a um pedido.");
 		}
 
 		await repository.deletePaymentMethod(id);

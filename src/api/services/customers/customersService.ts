@@ -1,6 +1,8 @@
 import CustomersRepository from "../../repositories/customers/customersRepository";
+import OrdersRepository from "../../repositories/orders/ordersRepository";
 
 const repository = new CustomersRepository();
+const repositoryOrders = new OrdersRepository();
 
 class CustomersService {
 	async getAllCustomers() {
@@ -68,6 +70,12 @@ class CustomersService {
 
 		if (!customer) {
 			throw new Error("Cliente não encontrado.");
+		}
+
+		const customerInOrder = await repositoryOrders.getOrderByCustomer(customer.id);
+
+		if (customerInOrder) {
+			throw new Error("Cliente não pode ser deletado, pois está vinculado a um pedido.");
 		}
 
 		await repository.deleteCustomer(id);
