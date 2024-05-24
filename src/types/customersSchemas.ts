@@ -5,8 +5,8 @@ const CustomerSchema = Type.Object({
 	name: Type.String(),
 	email: Type.String(),
 	status: Type.Boolean(),
-	created_at: Type.String(),
-	update_at: Type.String(),
+	createdAt: Type.String(),
+	updateAt: Type.String(),
 });
 
 const CustomerInsertSchema = Type.Pick(CustomerSchema, ["name", "email"]);
