@@ -11,7 +11,7 @@ const CustomerSchema = Type.Object({
 
 const CustomerInsertSchema = Type.Pick(CustomerSchema, ["name", "email"]);
 
-const CustomersUpdateSchema = Type.Omit(CustomerSchema, ["update_at", "created_at"]);
+const CustomersUpdateSchema = Type.Omit(CustomerSchema, ["updateAt", "createdAt"]);
 
 const CustomersListSchema = Type.Array(CustomerSchema);
 

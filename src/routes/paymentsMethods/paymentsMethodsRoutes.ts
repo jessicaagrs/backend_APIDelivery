@@ -5,8 +5,8 @@ import {
 	paymentMethodInsertSchema,
 	paymentMethodListSchema,
 	paymentMethodMessageResponse,
-} from "../../types/paymentMethodSchema";
-import { ErrorSchema } from "../../types/errorSchema";
+} from "../../types/schemas/paymentMethodSchema";
+import { ErrorSchema } from "../../types/schemas/errorSchema";
 
 const controller = new PaymentsMethodsController();
 

@@ -6,8 +6,8 @@ import {
 	shopmanListSchema,
 	shopmanMessageResponse,
 	shopmanUpdateSchema,
-} from "../../types/shopmansSchema";
-import { ErrorSchema } from "../../types/errorSchema";
+} from "../../types/schemas/shopmansSchema";
+import { ErrorSchema } from "../../types/schemas/errorSchema";
 
 const controller = new ShopmansController();
 

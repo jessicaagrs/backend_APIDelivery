@@ -3,9 +3,30 @@ import { z } from "zod";
 import { ApiError } from "../../../error/apiError";
 import OrdersService from "../../services/orders/ordersService";
 import { validateStatusOrders } from "../../../utils/formatter";
+import ProductsOrderService from "../../services/productsOrder/productsOrderService";
 
 const service = new OrdersService();
+const productsOrderService = new ProductsOrderService();
 
+const productSchema = z.object({
+	productId: z
+		.string({
+			required_error: "O id do produto é obrigatório",
+			invalid_type_error: "O id do produto deve ser uma string",
+		})
+		.min(1, {
+			message: "O id do produto não pode ser vazio",
+		}),
+	quantity: z
+		.number({
+			required_error: "A quantidade é obrigatória",
+			invalid_type_error: "A quantidade deve ser um número",
+		})
+		.int()
+		.positive({
+			message: "A quantidade deve ser maior que 0",
+		}),
+});
 const paramsSchema = z.object({
 	id: z
 		.string({
@@ -55,6 +76,9 @@ const paramsSchema = z.object({
 		.positive({
 			message: "O valor do pedido deve ser maior que 0",
 		}),
+	products: z.array(productSchema).nonempty({
+		message: "O array de produtos não pode ser vazio",
+	}),
 });
 
 type ParamsType = z.infer<typeof paramsSchema>;
@@ -97,8 +121,9 @@ class OrdersController {
 
 	async createOrder(request: FastifyRequest<{ Params: Partial<ParamsType> }>, reply: FastifyReply) {
 		try {
-			const { customerId, paymentMethodId, value } = paramsSchema.partial().parse(request.body);
+			const { customerId, paymentMethodId, value, products } = paramsSchema.partial().parse(request.body);
 			await service.createOrder(customerId, paymentMethodId, value);
+			await productsOrderService.createProductsOrder(products ?? []);
 			return reply.status(201).send("Pedido criado com sucesso.");
 		} catch (error: any) {
 			const statusCode = reply.statusCode || 500;

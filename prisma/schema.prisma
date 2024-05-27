@@ -14,10 +14,10 @@ datasource db {
 }
 
 model Customers {
-  id         String    @id @default(cuid())
-  name       String
-  email      String    @unique
-  status     Boolean
+  id        String    @id @default(cuid())
+  name      String
+  email     String    @unique
+  status    Boolean
   createdAt DateTime? @default(now())
   updateAt  DateTime? @default(now())
 }
@@ -28,11 +28,11 @@ model PaymentsMethods {
 }
 
 model Shopmans {
-  id         String    @id @default(cuid())
-  name       String
-  email      String    @unique
-  role       String
-  status     Boolean
+  id        String    @id @default(cuid())
+  name      String
+  email     String    @unique
+  role      String
+  status    Boolean
   createdAt DateTime? @default(now())
   updateAt  DateTime? @default(now())
 }
@@ -46,12 +46,19 @@ model Products {
 }
 
 model Orders {
-  id               String    @id @default(cuid())
+  id              String    @id @default(cuid())
   customerId      String
   shopmanId       String
   paymentMethodId String
-  value            Decimal   @db.Decimal(10, 2)
-  status           String
+  value           Decimal   @db.Decimal(10, 2)
+  status          String
   createdAt       DateTime? @default(now())
   updateAt        DateTime? @default(now())
+}
+
+model ProductsOrder {
+  id        String @id @default(cuid())
+  productId String
+  orderId   String
+  quantity  Int
 }

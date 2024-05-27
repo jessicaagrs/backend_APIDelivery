@@ -6,8 +6,8 @@ import {
 	CustomersUpdateSchema,
 	CustomersListSchema,
 	CustomerMessageResponse,
-} from "../../types/customersSchemas";
-import { ErrorSchema } from "../../types/errorSchema";
+} from "../../types/schemas/customersSchemas";
+import { ErrorSchema } from "../../types/schemas/errorSchema";
 
 const controller = new CustomersController();
 

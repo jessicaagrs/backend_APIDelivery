@@ -1,6 +1,6 @@
 import { FastifyInstance, FastifyPluginOptions } from "fastify";
 import OrdersController from "../../api/controllers/orders/ordersController";
-import { ErrorSchema } from "../../types/errorSchema";
+import { ErrorSchema } from "../../types/schemas/errorSchema";
 import {
 	OrderSchema,
 	OrderInserSchema,
@@ -8,7 +8,7 @@ import {
 	OrderUpdateCustomerSchema,
 	OrdersListSchema,
 	OrderMessageResponse,
-} from "../../types/ordersSchemas";
+} from "../../types/schemas/ordersSchemas";
 
 const controller = new OrdersController();
 

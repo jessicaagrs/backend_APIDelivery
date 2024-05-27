@@ -5,8 +5,8 @@ import {
 	productInsertSchema,
 	productMessageResponse,
 	productsListSchema,
-} from "../../types/productsSchema";
-import { ErrorSchema } from "../../types/errorSchema";
+} from "../../types/schemas/productsSchema";
+import { ErrorSchema } from "../../types/schemas/errorSchema";
 
 const controller = new ProductsController();
 
