@@ -3,11 +3,8 @@ import { z } from "zod";
 import { ApiError } from "../../../error/apiError";
 import OrdersService from "../../services/orders/ordersService";
 import { validateStatusOrders } from "../../../utils/formatter";
-import ProductsOrderService from "../../services/productsOrder/productsOrderService";
 
 const service = new OrdersService();
-const productsOrderService = new ProductsOrderService();
-
 const productSchema = z.object({
 	productId: z
 		.string({
@@ -122,8 +119,7 @@ class OrdersController {
 	async createOrder(request: FastifyRequest<{ Params: Partial<ParamsType> }>, reply: FastifyReply) {
 		try {
 			const { customerId, paymentMethodId, value, products } = paramsSchema.partial().parse(request.body);
-			await service.createOrder(customerId, paymentMethodId, value);
-			await productsOrderService.createProductsOrder(products ?? []);
+			await service.createOrder(customerId, paymentMethodId, value, products);
 			return reply.status(201).send("Pedido criado com sucesso.");
 		} catch (error: any) {
 			const statusCode = reply.statusCode || 500;
@@ -134,7 +130,7 @@ class OrdersController {
 
 	async updateOrderByCustomer(request: FastifyRequest<{ Params: Partial<ParamsType> }>, reply: FastifyReply) {
 		try {
-			const { id, paymentMethodId, status, value } = paramsSchema.partial().parse(request.body);
+			const { id, paymentMethodId, status, value} = paramsSchema.partial().parse(request.body);
 			await service.updateOrderByCustomer(id, paymentMethodId, status, value);
 			return reply.status(200).send("Pedido atualizado com sucesso.");
 		} catch (error: any) {
@@ -146,7 +142,7 @@ class OrdersController {
 
 	async updateOrderByShopman(request: FastifyRequest<{ Params: Partial<ParamsType> }>, reply: FastifyReply) {
 		try {
-			const { id, shopmanId, status } = paramsSchema.partial().parse(request.body);
+			const { id, shopmanId, status} = paramsSchema.partial().parse(request.body);
 			await service.updateOrderByShopman(id, shopmanId, status);
 			return reply.status(200).send("Pedido atualizado com sucesso.");
 		} catch (error: any) {

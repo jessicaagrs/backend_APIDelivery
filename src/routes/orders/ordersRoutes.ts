@@ -3,7 +3,7 @@ import OrdersController from "../../api/controllers/orders/ordersController";
 import { ErrorSchema } from "../../types/schemas/errorSchema";
 import {
 	OrderSchema,
-	OrderInserSchema,
+	OrderInsertSchema,
 	OrderUpdateShopmanSchema,
 	OrderUpdateCustomerSchema,
 	OrdersListSchema,
@@ -85,7 +85,7 @@ export async function ordersRoutes(fastify: FastifyInstance, options: FastifyPlu
 			schema: {
 				description: "Add a new order.",
 				tags: ["orders"],
-				body: OrderInserSchema,
+				body: OrderInsertSchema,
 				response: {
 					200: OrderMessageResponse,
 					400: ErrorSchema,

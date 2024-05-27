@@ -4,7 +4,7 @@ import cors from "@fastify/cors";
 import swagger from "@fastify/swagger";
 import swaggerUI from "@fastify/swagger-ui";
 
-const app = Fastify({ logger: true });
+const app = Fastify({ logger: false });
 
 const start = async () => {
 	await app.register(swagger, {

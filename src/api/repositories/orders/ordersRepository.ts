@@ -46,7 +46,7 @@ class OrdersRepository {
 	}
 
 	async createOrder(customerId: string, paymentMethodId: string, status: string, value: number) {
-		await prismaClient.orders.create({
+		return await prismaClient.orders.create({
 			data: {
 				customerId: customerId,
 				shopmanId: "",
@@ -58,7 +58,7 @@ class OrdersRepository {
 	}
 
 	async updateOrderStatus(id: string, paymentMethodId: string, status: string, value: number, shopmanId: string) {
-		await prismaClient.orders.update({
+		return await prismaClient.orders.update({
 			where: {
 				id,
 			},

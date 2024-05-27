@@ -1,13 +1,16 @@
 import { StatusOrdersEnum } from "../../../enums/enums";
+import { ProductsOrderResponse } from "../../../types/model/productsOrderModel";
 import CustomersRepository from "../../repositories/customers/customersRepository";
 import OrdersRepository from "../../repositories/orders/ordersRepository";
 import PaymentsMethodsRepository from "../../repositories/paymentsMethods/paymentsMethodsRepository";
 import ShopmansRepository from "../../repositories/shopmans/shopmansRepository";
+import ProductsOrderService from "../productsOrder/productsOrderService";
 
 const repository = new OrdersRepository();
 const repositoryCustomer = new CustomersRepository();
 const repositoryPaymentMethod = new PaymentsMethodsRepository();
 const repositoryShopman = new ShopmansRepository();
+const productsOrderService = new ProductsOrderService();
 
 class OrdersService {
 	async getAllOrders() {
@@ -24,7 +27,7 @@ class OrdersService {
 		return await repository.getOrdersByStatus(status);
 	}
 
-	async createOrder(customerId: string | undefined, paymentMethodId: string | undefined, value: number | undefined) {
+	async createOrder(customerId: string | undefined, paymentMethodId: string | undefined, value: number | undefined, products: ProductsOrderResponse[] | undefined) {
 		if (customerId == undefined) throw new Error("O ID do cliente é obrigatório");
 
 		if (paymentMethodId == undefined) throw new Error("O ID do método de pagamento é obrigatório");
@@ -37,7 +40,8 @@ class OrdersService {
 		let paymentMethod = await repositoryPaymentMethod.getPaymentMethodById(paymentMethodId);
 		if (paymentMethod == null) throw new Error("Não existe um método de pagamento com o ID informado");
 
-		await repository.createOrder(customerId, paymentMethodId, StatusOrdersEnum.PENDING, value);
+		const newOrder = await repository.createOrder(customerId, paymentMethodId, StatusOrdersEnum.PENDING, value);
+		await productsOrderService.createProductsOrder(products, newOrder.id);
 	}
 
 	async updateOrderByCustomer(
@@ -69,7 +73,7 @@ class OrdersService {
 	async updateOrderByShopman(
 		id: string | undefined,
 		shopmanId: string | undefined,
-		status: string | undefined,
+		status: string | undefined
 	) {
 		if (id == undefined) throw new Error("O ID do pedido é obrigatório");
 
