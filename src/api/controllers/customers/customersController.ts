@@ -21,6 +21,18 @@ const paramsSchema = z.object({
 		.min(10, {
 			message: "O nome do cliente deve ter no mínimo 10 caracteres",
 		}),
+	password: z
+		.string({
+			required_error: "A senha é obrigatória",
+			invalid_type_error: "A senha do cliente deve ser uma string",
+		})
+		.min(8, {
+			message: "A senha deve ter no mínimo 8 caracteres",
+		}),
+	storeId: z.string({
+		required_error: "O id da loja é obrigatório",
+		invalid_type_error: "O id da loja deve ser uma string",
+	}),
 	email: z
 		.string({
 			required_error: "O email do cliente é obrigatório",
@@ -62,8 +74,8 @@ class CustomersController {
 
 	async createCustomer(request: FastifyRequest, reply: FastifyReply) {
 		try {
-			const { name, email } = paramsSchema.partial().parse(request.body);
-			await service.createCustomer(name, email);
+			const { name, email, password, storeId } = paramsSchema.partial().parse(request.body);
+			await service.createCustomer({ name, email, password, storeId });
 			return reply.status(201).send("Cliente criado com sucesso.");
 		} catch (error: any) {
 			const statusCode = reply.statusCode || 500;
@@ -74,8 +86,8 @@ class CustomersController {
 
 	async updateCustomer(request: FastifyRequest<{ Params: ParamsType }>, reply: FastifyReply) {
 		try {
-			const { id, name, email, status } = paramsSchema.parse(request.body);
-			await service.updateCustomer(id, name, email, status);
+			const { id, name, email, password } = paramsSchema.partial().parse(request.body);
+			await service.updateCustomer({ id, name, email, password });
 			return reply.send("Cliente atualizado com sucesso.");
 		} catch (error: any) {
 			const statusCode = reply.statusCode || 500;
@@ -88,7 +100,7 @@ class CustomersController {
 		try {
 			const id = paramsSchema.partial().parse(request.params).id;
 			await service.deleteCustomer(id);
-			return reply.status(200).send(`Cliente [${id}] deletado com sucesso.`);
+			return reply.status(200).send(`Cliente [${id}] removido com sucesso.`);
 		} catch (error: any) {
 			const statusCode = reply.statusCode || 500;
 			const err = new ApiError(statusCode, error.message);

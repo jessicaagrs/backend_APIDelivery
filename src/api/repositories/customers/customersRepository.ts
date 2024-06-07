@@ -27,17 +27,19 @@ class CustomersRepository {
 		return user;
 	}
 
-	async createCustomer(name: string, email: string) {
+	async createCustomer(name: string, email: string, password: string, storeId: string) {
 		await prismaClient.customers.create({
 			data: {
 				name,
 				email,
+				password,
+				storeId,
 				status: true,
 			},
 		});
 	}
 
-	async updateCustomer(id: string, name: string, email: string, status: boolean) {
+	async updateCustomer(id: string, name: string, email: string, password : string) {
 		await prismaClient.customers.update({
 			where: {
 				id,
@@ -45,6 +47,18 @@ class CustomersRepository {
 			data: {
 				name,
 				email,
+				password,
+				updateAt: new Date(),
+			},
+		});
+	}
+
+	async disableCustomer(id: string, status: boolean) {
+		await prismaClient.customers.update({
+			where: {
+				id,
+			},
+			data: {
 				status,
 				updateAt: new Date(),
 			},

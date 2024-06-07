@@ -18,6 +18,8 @@ model Customers {
   name      String
   email     String    @unique
   status    Boolean
+  password  String
+  storeId   String
   createdAt DateTime? @default(now())
   updateAt  DateTime? @default(now())
 }
@@ -25,6 +27,7 @@ model Customers {
 model PaymentsMethods {
   id          String @id @default(cuid())
   description String
+  storeId     String
 }
 
 model Shopmans {
@@ -33,6 +36,8 @@ model Shopmans {
   email     String    @unique
   role      String
   status    Boolean
+  password  String
+  storeId   String
   createdAt DateTime? @default(now())
   updateAt  DateTime? @default(now())
 }
@@ -43,6 +48,7 @@ model Products {
   price       Decimal @db.Decimal(10, 2)
   urlImage    String
   type        String
+  storeId     String
 }
 
 model Orders {
@@ -52,6 +58,7 @@ model Orders {
   paymentMethodId String
   value           Decimal   @db.Decimal(10, 2)
   status          String
+  storeId         String
   createdAt       DateTime? @default(now())
   updateAt        DateTime? @default(now())
 }
@@ -61,4 +68,12 @@ model ProductsOrder {
   productId String
   orderId   String
   quantity  Int
+}
+
+model Store {
+  id              String    @id @default(cuid())
+  cnpj            String    @unique
+  corporateReason String
+  createdAt       DateTime? @default(now())
+  updateAt        DateTime? @default(now())
 }

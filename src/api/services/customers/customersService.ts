@@ -1,8 +1,13 @@
+import { CustomerModel } from "../../../types/model/customerModel";
+import { decryptCustomerPassword, encryptCustomerPassword } from "../../../utils/formatter";
 import CustomersRepository from "../../repositories/customers/customersRepository";
 import OrdersRepository from "../../repositories/orders/ordersRepository";
 
 const repository = new CustomersRepository();
 const repositoryOrders = new OrdersRepository();
+
+type insertCustomer = Omit<CustomerModel, "id" | "createdAt" | "updateAt" | "status">;
+type updateCustomer = Omit<CustomerModel, "createdAt" | "updateAt" | "status" | "storeId">;
 
 class CustomersService {
 	async getAllCustomers() {
@@ -23,9 +28,9 @@ class CustomersService {
 		return customer;
 	}
 
-	async createCustomer(name: string | undefined, email: string | undefined) {
-		if (name === undefined || email === undefined) {
-			throw new Error("Para criar um cliente, o nome e o email devem ser informados.");
+	async createCustomer({ name, email, password, storeId }: insertCustomer) {
+		if (name === undefined || email === undefined || password === undefined || storeId === undefined) {
+			throw new Error("Para criar um cliente, o nome, senha, id da loja e o email devem ser informados.");
 		}
 
 		const customer = await repository.getCustomerByEmail(email);
@@ -34,16 +39,18 @@ class CustomersService {
 			throw new Error("Já existe um cliente com este email.");
 		}
 
-		await repository.createCustomer(name, email);
+		const passwordEncrypt = encryptCustomerPassword(password);
+
+		await repository.createCustomer(name, email, passwordEncrypt, storeId);
 	}
 
-	async updateCustomer(id: string, name: string, email: string, status: boolean) {
-		if (name === "" || email === "") {
-			throw new Error("Para atualizar um cliente, nome e email devem ser informados.");
+	async updateCustomer({ id, name, email, password }: updateCustomer) {
+		if (name === "" || !name || email === "" || !email || !password) {
+			throw new Error("Para atualizar um cliente, nome, senha e email devem ser informados.");
 		}
 
-		if (id === "") {
-			throw new Error("ID do cliente não informado.");
+		if (!id || id === "") {
+			throw new Error("Id do cliente não informado.");
 		}
 
 		const customer = await repository.getCustomerById(id);
@@ -58,7 +65,13 @@ class CustomersService {
 			throw new Error("Já existe um cliente com este email.");
 		}
 
-		await repository.updateCustomer(id, name, email, status);
+		const passwordDecrypt = decryptCustomerPassword(customer.password);
+
+		if (password != passwordDecrypt) {
+			password = encryptCustomerPassword(password);
+		}
+
+		await repository.updateCustomer(id, name, email, password);
 	}
 
 	async deleteCustomer(id: string | undefined) {
@@ -75,7 +88,8 @@ class CustomersService {
 		const customerInOrder = await repositoryOrders.getOrderByCustomer(customer.id);
 
 		if (customerInOrder) {
-			throw new Error("Cliente não pode ser deletado, pois está vinculado a um pedido.");
+			await repository.disableCustomer(id, false);
+			return;
 		}
 
 		await repository.deleteCustomer(id);
