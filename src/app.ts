@@ -5,6 +5,7 @@ import { shopmansRoutes } from "./routes/shopmans/shopmansRoutes";
 import { productsRoutes } from "./routes/products/productsRoutes";
 import { ordersRoutes } from "./routes/orders/ordersRoutes";
 import { productsOrderRoutes } from "./routes/productsOrder/productsOrderRoutes";
+import { storesRoutes } from "./routes/stores/storesRoutes";
 
 export async function routes(fastify: FastifyInstance, options: FastifyPluginOptions) {
 	fastify.register(customersRoutes);
@@ -13,4 +14,5 @@ export async function routes(fastify: FastifyInstance, options: FastifyPluginOpt
 	fastify.register(productsRoutes);
 	fastify.register(ordersRoutes);
 	fastify.register(productsOrderRoutes);
+	fastify.register(storesRoutes);
 }

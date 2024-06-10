@@ -22,6 +22,14 @@ const paramsSchema = z.object({
 		.length(14, {
 			message: "O cnpj deve ter 14 caracteres, sem pontuação ou caracteres especiais.",
 		}),
+	phone: z
+		.string({
+			required_error: "O telefone é obrigatório",
+			invalid_type_error: "O telefone deve ser uma string",
+		})
+		.min(10, {
+			message: "O telefone deve ter no mínimo 10 caracteres, considerando o DD",
+		}),
 	corporateReason: z.string({
 		required_error: "O id da loja é obrigatório",
 		invalid_type_error: "O id da loja deve ser uma string",
@@ -56,8 +64,8 @@ class StoresController {
 
 	async createStore(request: FastifyRequest<{ Params: Partial<ParamsType> }>, reply: FastifyReply) {
 		try {
-			const { cnpj, corporateReason } = paramsSchema.partial().parse(request.body);
-			await service.createStore(cnpj, corporateReason);
+			const { cnpj, corporateReason, phone } = paramsSchema.partial().parse(request.body);
+			await service.createStore(cnpj, corporateReason, phone);
 			return reply.status(201).send("Loja criada com sucesso.");
 		} catch (error: any) {
 			const statusCode = reply.statusCode || 500;
@@ -68,8 +76,8 @@ class StoresController {
 
 	async updateStore(request: FastifyRequest<{ Params: Partial<ParamsType> }>, reply: FastifyReply) {
 		try {
-			const { id, cnpj, corporateReason } = paramsSchema.partial().parse(request.body);
-			await service.updateStore(id, cnpj, corporateReason);
+			const { id, cnpj, corporateReason, phone } = paramsSchema.partial().parse(request.body);
+			await service.updateStore(id, cnpj, corporateReason, phone);
 			return reply.status(200).send("Dados da loja atualizados com sucesso.");
 		} catch (error: any) {
 			const statusCode = reply.statusCode || 500;

@@ -84,7 +84,7 @@ export async function storesRoutes(fastify: FastifyInstance, options: FastifyPlu
 		controller.updateStore
 	);
 	fastify.delete(
-		"/paymentsmethods/:id",
+		"/stores/:id",
 		{
 			schema: {
 				description: "Removes a store.",

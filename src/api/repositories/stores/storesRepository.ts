@@ -25,16 +25,17 @@ class StoresRepository {
         return store;   
     }
 
-    async createStore(cnpj: string, corporateReason: string) {
+    async createStore(cnpj: string, corporateReason: string, phone : string) {
         await prismaClient.stores.create({
             data: {
                 cnpj,
-                corporateReason
+                corporateReason,
+                phone
             }
         });
     }
 
-    async updateStore(id: string, cnpj: string, corporateReason: string) {
+    async updateStore(id: string, cnpj: string, corporateReason: string, phone : string) {
         await prismaClient.stores.update({
             where: {
                 id
@@ -42,6 +43,7 @@ class StoresRepository {
             data: {
                 cnpj,
                 corporateReason,
+                phone,
                 updateAt: new Date()
             }
         });
