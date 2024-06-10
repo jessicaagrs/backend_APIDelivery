@@ -5,13 +5,13 @@ const storeSchema = Type.Object({
 	cnpj: Type.String(),
 	corporateReason: Type.String(),
 	phone: Type.String(),
-	updatedAt: Type.Optional(Type.String()),
-	createAt: Type.Optional(Type.String()),
+	createdAt: Type.String(),
+	updateAt: Type.String(),
 });
 
 const insertStoreSchema = Type.Pick(storeSchema, ["cnpj", "corporateReason", "phone"]);
 
-const updateStoreSchema = Type.Pick(storeSchema, ["id", "cnpj", "corporateReason", "phone"]);
+const updateStoreSchema = Type.Pick(storeSchema, ["id", "corporateReason", "phone"]);
 
 const storeListSchema = Type.Array(storeSchema);
 

@@ -76,8 +76,8 @@ class StoresController {
 
 	async updateStore(request: FastifyRequest<{ Params: Partial<ParamsType> }>, reply: FastifyReply) {
 		try {
-			const { id, cnpj, corporateReason, phone } = paramsSchema.partial().parse(request.body);
-			await service.updateStore(id, cnpj, corporateReason, phone);
+			const { id, corporateReason, phone } = paramsSchema.partial().parse(request.body);
+			await service.updateStore(id, corporateReason, phone);
 			return reply.status(200).send("Dados da loja atualizados com sucesso.");
 		} catch (error: any) {
 			const statusCode = reply.statusCode || 500;

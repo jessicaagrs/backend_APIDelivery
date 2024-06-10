@@ -33,8 +33,8 @@ type ParamsType = z.infer<typeof paramsSchema>;
 class PaymentsMethodsController {
 	async getAllPaymentsMethods(request: FastifyRequest, reply: FastifyReply) {
 		try {
-			const id = paramsSchema.partial().parse(request.params).id;
-			const paymentsMethods = await service.getAllPaymentsMethods(id);
+			const storeId = paramsSchema.partial().parse(request.params).storeId;
+			const paymentsMethods = await service.getAllPaymentsMethods(storeId);
 			return reply.send(paymentsMethods);
 		} catch (error: any) {
 			const statusCode = reply.statusCode || 500;

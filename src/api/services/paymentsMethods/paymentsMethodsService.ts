@@ -1,14 +1,21 @@
 import OrdersRepository from "../../repositories/orders/ordersRepository";
 import PaymentsMethodsRepository from "../../repositories/paymentsMethods/paymentsMethodsRepository";
+import StoresRepository from "../../repositories/stores/storesRepository";
 
 const repository = new PaymentsMethodsRepository();
 const repositoryOrders = new OrdersRepository();
+const repositoryStore = new StoresRepository();
 
 class PaymentsMethodsService {
 	async getAllPaymentsMethods(storeId: string | undefined) {
 		if (storeId === undefined) {
 			throw new Error("Id da loja não informado.");
 		}
+
+		const storeExist = await repositoryStore.getStoreById(storeId);
+
+		if (!storeExist) throw new Error("Loja não encontrada.");
+		
 		const payments = await repository.getAllPaymentMethods(storeId);
 
 		if (payments.length === 0) {
@@ -24,13 +31,23 @@ class PaymentsMethodsService {
 			throw new Error("Para criar um método de pagamento, a descrição e o id da loja devem ser informados.");
 		}
 
+		const storeExist = await repositoryStore.getStoreById(storeId);
+
+		if (!storeExist) throw new Error("Loja não encontrada.");
+
 		await repository.createPaymentMethod(description, storeId);
 	}
 
 	async updatePaymentMethod(description: string | undefined, id: string | undefined, storeId: string | undefined) {
 		if (description === undefined || id === undefined || storeId === undefined) {
-			throw new Error("Para atualizar um método de pagamento, a descrição, id da loja e o id da forma de pagamento devem ser informados.");
+			throw new Error(
+				"Para atualizar um método de pagamento, a descrição, id da loja e o id da forma de pagamento devem ser informados."
+			);
 		}
+
+		const storeExist = await repositoryStore.getStoreById(storeId);
+
+		if (!storeExist) throw new Error("Loja não encontrada.");
 
 		const payment = await repository.getPaymentMethodById(id);
 

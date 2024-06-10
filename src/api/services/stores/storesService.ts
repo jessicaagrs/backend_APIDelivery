@@ -33,20 +33,15 @@ class StoresService {
 		await repository.createStore(cnpj, corporateReason, phone);
 	}
 
-	async updateStore(
-		id: string | undefined,
-		cnpj: string | undefined,
-		corporateReason: string | undefined,
-		phone: string | undefined
-	) {
-		if (id == undefined || cnpj == undefined || corporateReason == undefined || phone == undefined)
-			throw new Error("O id, cnpj, telefone e a razão social da loja são obrigatórios");
+	async updateStore(id: string | undefined, corporateReason: string | undefined, phone: string | undefined) {
+		if (id == undefined || corporateReason == undefined || phone == undefined)
+			throw new Error("O id, telefone e a razão social da loja são obrigatórios");
 
 		const storeExist = await repository.getStoreById(id);
 
 		if (!storeExist) throw new Error("Loja não encontrada");
 
-		await repository.updateStore(id, cnpj, corporateReason, phone);
+		await repository.updateStore(id, corporateReason, phone);
 	}
 
 	async deleteStore(id: string | undefined) {
