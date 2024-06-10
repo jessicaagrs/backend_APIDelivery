@@ -28,9 +28,9 @@ class CustomersService {
 		return customer;
 	}
 
-	async createCustomer({ name, email, password }: insertCustomer) {
-		if (name === undefined || email === undefined || password === undefined) {
-			throw new Error("Para criar um cliente, o nome, senha, id da loja e o email devem ser informados.");
+	async createCustomer({ name, email, password, phone }: insertCustomer) {
+		if (name === undefined || email === undefined || password === undefined || phone === undefined) {
+			throw new Error("Para criar um cliente, o nome, senha, id da loja, telefone e o email devem ser informados.");
 		}
 
 		const customer = await repository.getCustomerByEmail(email);
@@ -41,12 +41,12 @@ class CustomersService {
 
 		const passwordEncrypt = encryptCustomerPassword(password);
 
-		await repository.createCustomer(name, email, passwordEncrypt);
+		await repository.createCustomer(name, email, passwordEncrypt, phone);
 	}
 
-	async updateCustomer({ id, name, email, password }: updateCustomer) {
-		if (name === "" || !name || email === "" || !email || !password) {
-			throw new Error("Para atualizar um cliente, nome, senha e email devem ser informados.");
+	async updateCustomer({ id, name, email, password, phone }: updateCustomer) {
+		if (name === "" || !name || email === "" || !email || !password || !phone) {
+			throw new Error("Para atualizar um cliente, nome, senha, telefone e email devem ser informados.");
 		}
 
 		if (!id || id === "") {
@@ -69,7 +69,7 @@ class CustomersService {
 
 		password != passwordDecrypt ? (password = encryptCustomerPassword(password)) : (password = customer.password);
 
-		await repository.updateCustomer(id, name, email, password);
+		await repository.updateCustomer(id, name, email, password, phone);
 	}
 
 	async deleteCustomer(id: string | undefined) {

@@ -19,6 +19,7 @@ model Customers {
   email     String    @unique
   status    Boolean
   password  String
+  phone     String
   createdAt DateTime? @default(now())
   updateAt  DateTime? @default(now())
 }
@@ -69,10 +70,11 @@ model ProductsOrder {
   quantity  Int
 }
 
-model Store {
+model Stores {
   id              String    @id @default(cuid())
   cnpj            String    @unique
   corporateReason String
+  phone           String
   createdAt       DateTime? @default(now())
   updateAt        DateTime? @default(now())
 }

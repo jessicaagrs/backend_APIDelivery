@@ -1,0 +1,59 @@
+import prismaClient from "../../../db/prisma";
+
+class StoresRepository {
+
+    async getAllStores() {
+        const stores = await prismaClient.stores.findMany();
+        return stores;
+    }
+
+    async getStoreById(id: string) {
+        const store = await prismaClient.stores.findUnique({
+            where: {
+                id
+            }
+        });
+        return store;
+    }
+
+    async getStoreByCNPJ(cnpj: string) {
+        const store = await prismaClient.stores.findUnique({
+            where: {
+                cnpj
+            }
+        });
+        return store;   
+    }
+
+    async createStore(cnpj: string, corporateReason: string) {
+        await prismaClient.stores.create({
+            data: {
+                cnpj,
+                corporateReason
+            }
+        });
+    }
+
+    async updateStore(id: string, cnpj: string, corporateReason: string) {
+        await prismaClient.stores.update({
+            where: {
+                id
+            },
+            data: {
+                cnpj,
+                corporateReason,
+                updateAt: new Date()
+            }
+        });
+    }
+
+    async deleteStore(id: string) {
+        await prismaClient.stores.delete({
+            where: {
+                id
+            }
+        });
+    }
+}
+
+export default StoresRepository;

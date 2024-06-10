@@ -29,6 +29,14 @@ const paramsSchema = z.object({
 		.min(8, {
 			message: "A senha deve ter no mínimo 8 caracteres",
 		}),
+	phone: z
+		.string({
+			required_error: "O telefone é obrigatório",
+			invalid_type_error: "O telefone deve ser uma string",
+		})
+		.min(10, {
+			message: "O telefone deve ter no mínimo 10 caracteres, considerando o DD",
+		}),
 	email: z
 		.string({
 			required_error: "O email do cliente é obrigatório",
@@ -70,8 +78,8 @@ class CustomersController {
 
 	async createCustomer(request: FastifyRequest, reply: FastifyReply) {
 		try {
-			const { name, email, password } = paramsSchema.partial().parse(request.body);
-			await service.createCustomer({ name, email, password });
+			const { name, email, password, phone } = paramsSchema.partial().parse(request.body);
+			await service.createCustomer({ name, email, password, phone });
 			return reply.status(201).send("Cliente criado com sucesso.");
 		} catch (error: any) {
 			const statusCode = reply.statusCode || 500;
@@ -82,8 +90,8 @@ class CustomersController {
 
 	async updateCustomer(request: FastifyRequest<{ Params: ParamsType }>, reply: FastifyReply) {
 		try {
-			const { id, name, email, password } = paramsSchema.partial().parse(request.body);
-			await service.updateCustomer({ id, name, email, password });
+			const { id, name, email, password, phone } = paramsSchema.partial().parse(request.body);
+			await service.updateCustomer({ id, name, email, password, phone });
 			return reply.send("Cliente atualizado com sucesso.");
 		} catch (error: any) {
 			const statusCode = reply.statusCode || 500;

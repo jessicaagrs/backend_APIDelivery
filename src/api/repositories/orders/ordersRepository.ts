@@ -45,6 +45,14 @@ class OrdersRepository {
 		});
 	}
 
+	async getOrderByStore(id: string) {
+		return await prismaClient.orders.findFirst({
+			where: {
+				storeId: id,
+			},
+		});
+	}
+
 	async createOrder(customerId: string, paymentMethodId: string, status: string, value: number) {
 		return await prismaClient.orders.create({
 			data: {

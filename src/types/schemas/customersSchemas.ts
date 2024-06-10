@@ -6,11 +6,12 @@ const CustomerSchema = Type.Object({
 	email: Type.String(),
 	status: Type.Boolean(),
 	password: Type.String(),
+	phone: Type.String(),
 	createdAt: Type.String(),
 	updateAt: Type.String(),
 });
 
-const CustomerInsertSchema = Type.Pick(CustomerSchema, ["name", "email", "password"]);
+const CustomerInsertSchema = Type.Pick(CustomerSchema, ["name", "email", "password", "phone"]);
 
 const CustomersUpdateSchema = Type.Omit(CustomerSchema, ["updateAt", "createdAt", "status"]);
 
