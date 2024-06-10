@@ -29,10 +29,6 @@ const paramsSchema = z.object({
 		.min(8, {
 			message: "A senha deve ter no mínimo 8 caracteres",
 		}),
-	storeId: z.string({
-		required_error: "O id da loja é obrigatório",
-		invalid_type_error: "O id da loja deve ser uma string",
-	}),
 	email: z
 		.string({
 			required_error: "O email do cliente é obrigatório",
@@ -74,8 +70,8 @@ class CustomersController {
 
 	async createCustomer(request: FastifyRequest, reply: FastifyReply) {
 		try {
-			const { name, email, password, storeId } = paramsSchema.partial().parse(request.body);
-			await service.createCustomer({ name, email, password, storeId });
+			const { name, email, password } = paramsSchema.partial().parse(request.body);
+			await service.createCustomer({ name, email, password });
 			return reply.status(201).send("Cliente criado com sucesso.");
 		} catch (error: any) {
 			const statusCode = reply.statusCode || 500;

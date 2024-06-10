@@ -7,7 +7,7 @@ const repository = new CustomersRepository();
 const repositoryOrders = new OrdersRepository();
 
 type insertCustomer = Omit<CustomerModel, "id" | "createdAt" | "updateAt" | "status">;
-type updateCustomer = Omit<CustomerModel, "createdAt" | "updateAt" | "status" | "storeId">;
+type updateCustomer = Omit<CustomerModel, "createdAt" | "updateAt" | "status">;
 
 class CustomersService {
 	async getAllCustomers() {
@@ -28,8 +28,8 @@ class CustomersService {
 		return customer;
 	}
 
-	async createCustomer({ name, email, password, storeId }: insertCustomer) {
-		if (name === undefined || email === undefined || password === undefined || storeId === undefined) {
+	async createCustomer({ name, email, password }: insertCustomer) {
+		if (name === undefined || email === undefined || password === undefined) {
 			throw new Error("Para criar um cliente, o nome, senha, id da loja e o email devem ser informados.");
 		}
 
@@ -41,7 +41,7 @@ class CustomersService {
 
 		const passwordEncrypt = encryptCustomerPassword(password);
 
-		await repository.createCustomer(name, email, passwordEncrypt, storeId);
+		await repository.createCustomer(name, email, passwordEncrypt);
 	}
 
 	async updateCustomer({ id, name, email, password }: updateCustomer) {
@@ -67,9 +67,7 @@ class CustomersService {
 
 		const passwordDecrypt = decryptCustomerPassword(customer.password);
 
-		if (password != passwordDecrypt) {
-			password = encryptCustomerPassword(password);
-		}
+		password != passwordDecrypt ? (password = encryptCustomerPassword(password)) : (password = customer.password);
 
 		await repository.updateCustomer(id, name, email, password);
 	}

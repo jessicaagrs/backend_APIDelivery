@@ -12,11 +12,20 @@ const controller = new PaymentsMethodsController();
 
 export async function paymentsMethodsRoutes(fastify: FastifyInstance, options: FastifyPluginOptions) {
 	fastify.get(
-		"/paymentsmethods",
+		"/paymentsmethods/:storeId",
 		{
 			schema: {
 				description: "Returns a list of payment methods.",
 				tags: ["payments methods"],
+				params: {
+					type: "object",
+					required: ["storeId"],
+					properties: {
+						storeId: {
+							type: "string",
+						},
+					},
+				},
 				response: {
 					200: paymentMethodListSchema,
 					400: ErrorSchema,

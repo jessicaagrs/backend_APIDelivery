@@ -19,7 +19,6 @@ model Customers {
   email     String    @unique
   status    Boolean
   password  String
-  storeId   String
   createdAt DateTime? @default(now())
   updateAt  DateTime? @default(now())
 }

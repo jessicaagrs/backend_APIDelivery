@@ -4,7 +4,6 @@ export interface CustomerModel {
     email?: string,
     status?: boolean,
     password?: string,
-    storeId?: string,
     createdAt?: string,
     updateAt?: string
 }

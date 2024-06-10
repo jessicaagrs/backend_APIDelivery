@@ -27,13 +27,12 @@ class CustomersRepository {
 		return user;
 	}
 
-	async createCustomer(name: string, email: string, password: string, storeId: string) {
+	async createCustomer(name: string, email: string, password: string) {
 		await prismaClient.customers.create({
 			data: {
 				name,
 				email,
 				password,
-				storeId,
 				status: true,
 			},
 		});

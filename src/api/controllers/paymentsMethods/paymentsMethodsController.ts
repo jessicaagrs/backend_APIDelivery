@@ -22,6 +22,10 @@ const paramsSchema = z.object({
 		.min(5, {
 			message: "A descrição do  método de pagamento deve ter pelo menos 5 caracteres",
 		}),
+	storeId: z.string({
+		required_error: "O id da loja é obrigatório",
+		invalid_type_error: "O id da loja deve ser uma string",
+	}),
 });
 
 type ParamsType = z.infer<typeof paramsSchema>;
@@ -29,7 +33,8 @@ type ParamsType = z.infer<typeof paramsSchema>;
 class PaymentsMethodsController {
 	async getAllPaymentsMethods(request: FastifyRequest, reply: FastifyReply) {
 		try {
-			const paymentsMethods = await service.getAllPaymentsMethods();
+			const id = paramsSchema.partial().parse(request.params).id;
+			const paymentsMethods = await service.getAllPaymentsMethods(id);
 			return reply.send(paymentsMethods);
 		} catch (error: any) {
 			const statusCode = reply.statusCode || 500;
@@ -40,8 +45,8 @@ class PaymentsMethodsController {
 
 	async createPaymentMethod(request: FastifyRequest<{ Params: Partial<ParamsType> }>, reply: FastifyReply) {
 		try {
-			const { description } = paramsSchema.partial().parse(request.body);
-			await service.createPaymentMethod(description);
+			const { description, storeId } = paramsSchema.partial().parse(request.body);
+			await service.createPaymentMethod(description, storeId);
 			return reply.status(201).send("Forma de pagamento criada com sucesso.");
 		} catch (error: any) {
 			const statusCode = reply.statusCode || 500;
@@ -52,8 +57,8 @@ class PaymentsMethodsController {
 
 	async updatePaymentMethod(request: FastifyRequest<{ Params: Partial<ParamsType> }>, reply: FastifyReply) {
 		try {
-			const { id, description } = paramsSchema.partial().parse(request.body);
-			await service.updatePaymentMethod(description, id);
+			const { id, description, storeId } = paramsSchema.partial().parse(request.body);
+			await service.updatePaymentMethod(description, id, storeId);
 			return reply.status(200).send("Forma de pagamento atualizada com sucesso.");
 		} catch (error: any) {
 			const statusCode = reply.statusCode || 500;
