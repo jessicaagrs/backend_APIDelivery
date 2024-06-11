@@ -4,6 +4,7 @@ import {
 	ProductSchema,
 	productInsertSchema,
 	productMessageResponse,
+	productUpdateSchema,
 	productsListSchema,
 } from "../../types/schemas/productsSchema";
 import { ErrorSchema } from "../../types/schemas/errorSchema";
@@ -12,10 +13,20 @@ const controller = new ProductsController();
 
 export async function productsRoutes(fastify: FastifyInstance, options: FastifyPluginOptions) {
 	fastify.get(
-		"/products",
+		"/products/all/:storeId",
 		{
 			schema: {
-				description: "Returns a list of products.",
+				description:
+					"Returns a list of products. If the store has not yet registered, standard products will be generated the first time.",
+				params: {
+					type: "object",
+					required: ["storeId"],
+					properties: {
+						storeId: {
+							type: "string",
+						},
+					},
+				},
 				tags: ["products"],
 				response: {
 					200: productsListSchema,
@@ -75,7 +86,7 @@ export async function productsRoutes(fastify: FastifyInstance, options: FastifyP
 			schema: {
 				description: "Updates product data.",
 				tags: ["products"],
-				body: ProductSchema,
+				body: productUpdateSchema,
 				response: {
 					200: productMessageResponse,
 					400: ErrorSchema,

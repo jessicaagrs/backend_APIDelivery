@@ -11,8 +11,8 @@ const productSchema = z.object({
 			required_error: "O id do produto é obrigatório",
 			invalid_type_error: "O id do produto deve ser uma string",
 		})
-		.min(1, {
-			message: "O id do produto não pode ser vazio",
+		.cuid({
+			message: "O id do produto deve ser um CUID",
 		}),
 	quantity: z
 		.number({
@@ -30,8 +30,8 @@ const paramsSchema = z.object({
 			required_error: "O id do pedido é obrigatório",
 			invalid_type_error: "O id do pedido deve ser uma string",
 		})
-		.min(1, {
-			message: "O id do pedido não pode ser vazio",
+		.cuid({
+			message: "O id deve ser um CUID",
 		}),
 	status: z
 		.string({
@@ -46,24 +46,24 @@ const paramsSchema = z.object({
 			required_error: "O id do vendedor é obrigatório",
 			invalid_type_error: "O id do vendedor deve ser uma string",
 		})
-		.min(1, {
-			message: "O id do vendedor não pode ser vazio",
+		.cuid({
+			message: "O id do vendedor deve ser um CUID",
 		}),
 	customerId: z
 		.string({
 			required_error: "O id do cliente é obrigatório",
 			invalid_type_error: "O id do cliente deve ser uma string",
 		})
-		.min(1, {
-			message: "O id do cliente não pode ser vazio",
+		.cuid({
+			message: "O id do cliente deve ser um CUID",
 		}),
 	paymentMethodId: z
 		.string({
 			required_error: "O id do método de pagamento é obrigatório",
 			invalid_type_error: "O id do método de pagamento deve ser uma string",
 		})
-		.min(1, {
-			message: "O id do método de pagamento não pode ser vazio",
+		.cuid({
+			message: "O id da forma de pagamento deve ser um CUID",
 		}),
 	value: z
 		.number({
@@ -130,7 +130,7 @@ class OrdersController {
 
 	async updateOrderByCustomer(request: FastifyRequest<{ Params: Partial<ParamsType> }>, reply: FastifyReply) {
 		try {
-			const { id, paymentMethodId, status, value} = paramsSchema.partial().parse(request.body);
+			const { id, paymentMethodId, status, value } = paramsSchema.partial().parse(request.body);
 			await service.updateOrderByCustomer(id, paymentMethodId, status, value);
 			return reply.status(200).send("Pedido atualizado com sucesso.");
 		} catch (error: any) {
@@ -142,7 +142,7 @@ class OrdersController {
 
 	async updateOrderByShopman(request: FastifyRequest<{ Params: Partial<ParamsType> }>, reply: FastifyReply) {
 		try {
-			const { id, shopmanId, status} = paramsSchema.partial().parse(request.body);
+			const { id, shopmanId, status } = paramsSchema.partial().parse(request.body);
 			await service.updateOrderByShopman(id, shopmanId, status);
 			return reply.status(200).send("Pedido atualizado com sucesso.");
 		} catch (error: any) {

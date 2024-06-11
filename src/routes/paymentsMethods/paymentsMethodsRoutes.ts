@@ -15,7 +15,8 @@ export async function paymentsMethodsRoutes(fastify: FastifyInstance, options: F
 		"/paymentsmethods/:storeId",
 		{
 			schema: {
-				description: "Returns a list of payment methods.",
+				description:
+					"Returns a list of payment methods. If the store has not yet registered, the default payment methods will be generated the first time.",
 				tags: ["payments methods"],
 				params: {
 					type: "object",

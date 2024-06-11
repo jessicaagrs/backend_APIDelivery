@@ -12,8 +12,8 @@ const paramsSchema = z.object({
 			required_error: "O id do produto é obrigatório",
 			invalid_type_error: "O id do produto deve ser uma string",
 		})
-		.min(1, {
-			message: "O id do produto não pode ser vazio",
+		.cuid({
+			message: "O id deve ser um CUID",
 		}),
 	description: z
 		.string({
@@ -47,6 +47,14 @@ const paramsSchema = z.object({
 		.url({
 			message: "A url deve ter um formato válido",
 		}),
+	storeId: z
+		.string({
+			required_error: "O id da loja é obrigatório",
+			invalid_type_error: "O id da loja deve ser uma string",
+		})
+		.cuid({
+			message: "O id da loja deve ser um CUID",
+		}),
 });
 
 type ParamsType = z.infer<typeof paramsSchema>;
@@ -54,7 +62,8 @@ type ParamsType = z.infer<typeof paramsSchema>;
 class ProductsController {
 	async getAllProducts(request: FastifyRequest, reply: FastifyReply) {
 		try {
-			const products = await service.getAllProducts();
+			const storeId = paramsSchema.partial().parse(request.params).storeId;
+			const products = await service.getAllProducts(storeId);
 			return reply.send(products);
 		} catch (error: any) {
 			const statusCode = reply.statusCode || 500;
@@ -77,8 +86,8 @@ class ProductsController {
 
 	async createProduct(request: FastifyRequest<{ Params: Partial<ParamsType> }>, reply: FastifyReply) {
 		try {
-			const { description, price, type, urlImage } = paramsSchema.partial().parse(request.body);
-			await service.createProduct(description, price, type, urlImage);
+			const { description, price, type, urlImage, storeId } = paramsSchema.partial().parse(request.body);
+			await service.createProduct(description, price, type, urlImage, storeId);
 			reply.status(201).send("Produto criado com sucesso.");
 		} catch (error: any) {
 			const statusCode = reply.statusCode || 500;
@@ -90,7 +99,7 @@ class ProductsController {
 	async updateProduct(request: FastifyRequest<{ Params: Partial<ParamsType> }>, reply: FastifyReply) {
 		try {
 			const { id, description, price, type, urlImage } = paramsSchema.partial().parse(request.body);
-			await service.updateProduct(description, price, type, urlImage, id ?? "");
+			await service.updateProduct(description, price, type, urlImage, id);
 			reply.send("Produto atualizado com sucesso.");
 		} catch (error: any) {
 			const statusCode = reply.statusCode || 500;

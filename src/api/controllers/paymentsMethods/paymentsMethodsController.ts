@@ -11,8 +11,8 @@ const paramsSchema = z.object({
 			required_error: "O id do método de pagamento é obrigatório",
 			invalid_type_error: "O id do método de pagamento deve ser uma string",
 		})
-		.min(1, {
-			message: "O id do método de pagamento não pode ser vazio",
+		.cuid({
+			message: "O id deve ser um CUID",
 		}),
 	description: z
 		.string({
@@ -22,10 +22,14 @@ const paramsSchema = z.object({
 		.min(5, {
 			message: "A descrição do  método de pagamento deve ter pelo menos 5 caracteres",
 		}),
-	storeId: z.string({
-		required_error: "O id da loja é obrigatório",
-		invalid_type_error: "O id da loja deve ser uma string",
-	}),
+	storeId: z
+		.string({
+			required_error: "O id da loja é obrigatório",
+			invalid_type_error: "O id da loja deve ser uma string",
+		})
+		.cuid({
+			message: "O id da loja deve ser um CUID",
+		}),
 });
 
 type ParamsType = z.infer<typeof paramsSchema>;

@@ -12,8 +12,8 @@ const paramsSchema = z.object({
 			required_error: "O id do vendedor é obrigatório",
 			invalid_type_error: "O id do vendedor deve ser uma string",
 		})
-		.min(1, {
-			message: "O id do vendedor não pode ser vazio",
+		.cuid({
+			message: "O id deve ser um CUID",
 		}),
 	name: z
 		.string({

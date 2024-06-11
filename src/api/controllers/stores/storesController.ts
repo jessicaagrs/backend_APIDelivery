@@ -11,8 +11,8 @@ const paramsSchema = z.object({
 			required_error: "O id do método de pagamento é obrigatório",
 			invalid_type_error: "O id do método de pagamento deve ser uma string",
 		})
-		.min(1, {
-			message: "O id do método de pagamento não pode ser vazio",
+		.cuid({
+			message: "O id deve ser um CUID",
 		}),
 	cnpj: z
 		.string({

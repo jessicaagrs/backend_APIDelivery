@@ -1,14 +1,22 @@
 import ProductsRepository from "../../repositories/products/productsRepository";
+import StoresRepository from "../../repositories/stores/storesRepository";
 
 const repository = new ProductsRepository();
+const storesRepository = new StoresRepository();
 
 class ProductsService {
-	async getAllProducts() {
-		const products = await repository.getAllProducts();
+	async getAllProducts(storeId: string | undefined) {
+		if (!storeId) throw new Error("Id da loja não informado.");
+
+		const storeExist = await storesRepository.getStoreById(storeId);
+
+		if (!storeExist) throw new Error("Loja não encontrada.");
+
+		const products = await repository.getAllProducts(storeId);
 
 		if (products.length === 0) {
-			await repository.createProductsDefault();
-			return await repository.getAllProducts();
+			await repository.createProductsDefault(storeId);
+			return await repository.getAllProducts(storeId);
 		}
 
 		return products;
@@ -30,13 +38,26 @@ class ProductsService {
 		description: string | undefined,
 		price: number | undefined,
 		type: string | undefined,
-		urlImage: string | undefined
+		urlImage: string | undefined,
+		storeId: string | undefined
 	) {
-		if (description === undefined || price === undefined || type === undefined || urlImage === undefined) {
-			throw new Error("Para criar um produto, a descrição, o preço, o tipo e a url da imagem devem ser informados.");
+		if (
+			description === undefined ||
+			price === undefined ||
+			type === undefined ||
+			urlImage === undefined ||
+			storeId === undefined
+		) {
+			throw new Error(
+				"Para criar um produto, a descrição, o preço, o tipo, id da loja e a url da imagem devem ser informados."
+			);
 		}
 
-		await repository.createProduct(description, price, type, urlImage);
+		const storeExist = await storesRepository.getStoreById(storeId);
+
+		if (!storeExist) throw new Error("Loja não encontrada.");
+
+		await repository.createProduct(description, price, type, urlImage, storeId);
 	}
 
 	async updateProduct(
@@ -77,6 +98,7 @@ class ProductsService {
 		if (!product) {
 			throw new Error("Produto não encontrado.");
 		}
+
 
 		await repository.deleteProduct(id);
 	}

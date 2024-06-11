@@ -6,10 +6,14 @@ import ProductsOrderService from "../../services/productsOrder/productsOrderServ
 const service = new ProductsOrderService();
 
 const paramsSchema = z.object({
-	idOrder: z.string({
-		required_error: "O id do método de pagamento é obrigatório",
-		invalid_type_error: "O id do método de pagamento deve ser uma string",
-	}),
+	idOrder: z
+		.string({
+			required_error: "O id do método de pagamento é obrigatório",
+			invalid_type_error: "O id do método de pagamento deve ser uma string",
+		})
+		.cuid({
+			message: "O id deve ser um CUID",
+		}),
 });
 
 type ParamsType = z.infer<typeof paramsSchema>;
