@@ -1,8 +1,10 @@
 import ProductsRepository from "../../repositories/products/productsRepository";
+import ProductsOrderRepository from "../../repositories/productsOrder/productsOrderRepository";
 import StoresRepository from "../../repositories/stores/storesRepository";
 
 const repository = new ProductsRepository();
 const storesRepository = new StoresRepository();
+const productsOrderRepository = new ProductsOrderRepository();
 
 class ProductsService {
 	async getAllProducts(storeId: string | undefined) {
@@ -99,6 +101,9 @@ class ProductsService {
 			throw new Error("Produto não encontrado.");
 		}
 
+		const productInOrder = await productsOrderRepository.getProductById(product.id);
+
+		if (productInOrder) throw new Error("Produto consta em um ou mais pedidos e não pode ser excluído.");
 
 		await repository.deleteProduct(id);
 	}

@@ -8,6 +8,16 @@ class ProductsOrderRepository {
 		});
 	}
 
+	async getProductById(productId: string) {
+		const product = await prismaClient.productsOrder.findFirst({
+			where: {
+				productId,
+			},
+		});
+
+		return product;
+	}
+
 	async getOrderedProducts(orderId: string) {
 		const orderedProducts = await prismaClient.productsOrder.findMany({
 			where: { orderId },
