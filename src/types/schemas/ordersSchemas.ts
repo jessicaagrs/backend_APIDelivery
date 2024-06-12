@@ -27,7 +27,7 @@ const OrderInsertSchema = Type.Object({
 
 const OrderUpdateShopmanSchema = Type.Pick(OrderSchema, ["id", "status", "shopmanId"]);
 
-const OrderUpdateCustomerSchema = Type.Omit(OrderSchema, ["customerId", "shopmanId", "createdAt", "updateAt", "storeId"]);
+const OrderUpdateCustomerSchema = Type.Omit(OrderSchema, ["customerId", "shopmanId", "createdAt", "updateAt", "storeId", "value"]);
 
 const OrdersListSchema = Type.Array(OrderSchema);
 

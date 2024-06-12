@@ -110,17 +110,10 @@ class OrdersService {
 		await productsOrderService.createProductsOrder(products, newOrder.id);
 	}
 
-	async updateOrderByCustomer(
-		id: string | undefined,
-		paymentMethodId: string | undefined,
-		status: string | undefined,
-		value: number | undefined
-	) {
+	async updateOrderByCustomer(id: string | undefined, paymentMethodId: string | undefined, status: string | undefined) {
 		if (id == undefined) throw new Error("O ID do pedido é obrigatório");
 
 		if (paymentMethodId == undefined) throw new Error("O ID da forma de pagamento é obrigatória");
-
-		if (value == undefined) throw new Error("O valor total do pedido é obrigatório");
 
 		if (status == undefined) throw new Error("O status do pedido é obrigatório");
 
@@ -133,7 +126,7 @@ class OrdersService {
 		let paymentMethod = await repositoryPaymentMethod.getPaymentMethodById(paymentMethodId);
 		if (paymentMethod == null) throw new Error("Não existe um método de pagamento com o ID informado");
 
-		await repository.updateOrderStatus(id, paymentMethodId, status, value, order.shopmanId);
+		await repository.updateOrderStatus(id, paymentMethodId, status, order.shopmanId);
 	}
 
 	async updateOrderByShopman(id: string | undefined, shopmanId: string | undefined, status: string | undefined) {
@@ -149,7 +142,7 @@ class OrdersService {
 		const shopman = await repositoryShopman.getShopmanById(shopmanId);
 		if (shopman == null) throw new Error("Não existe um vendedor com o ID informado");
 
-		await repository.updateOrderStatus(id, order.paymentMethodId, status, Number(order.value), shopmanId);
+		await repository.updateOrderStatus(id, order.paymentMethodId, status, shopmanId);
 	}
 
 	async deleteOrderByCustomer(id: string | undefined) {

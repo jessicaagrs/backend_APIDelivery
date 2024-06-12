@@ -90,7 +90,7 @@ class OrdersRepository {
 		});
 	}
 
-	async updateOrderStatus(id: string, paymentMethodId: string, status: string, value: number, shopmanId: string) {
+	async updateOrderStatus(id: string, paymentMethodId: string, status: string, shopmanId: string) {
 		return await prismaClient.orders.update({
 			where: {
 				id,
@@ -99,7 +99,6 @@ class OrdersRepository {
 				shopmanId,
 				paymentMethodId,
 				status,
-				value,
 				updateAt: new Date(),
 			},
 		});
