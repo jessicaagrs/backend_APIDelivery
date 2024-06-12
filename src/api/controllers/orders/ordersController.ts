@@ -76,6 +76,14 @@ const paramsSchema = z.object({
 	products: z.array(productSchema).nonempty({
 		message: "O array de produtos não pode ser vazio",
 	}),
+	storeId: z
+		.string({
+			required_error: "O id da loja é obrigatório",
+			invalid_type_error: "O id da loja deve ser uma string",
+		})
+		.cuid({
+			message: "O id da loja deve ser um CUID",
+		}),
 });
 
 type ParamsType = z.infer<typeof paramsSchema>;
@@ -83,7 +91,8 @@ type ParamsType = z.infer<typeof paramsSchema>;
 class OrdersController {
 	async getAllOrders(request: FastifyRequest, reply: FastifyReply) {
 		try {
-			const orders = await service.getAllOrders();
+			const storeId = paramsSchema.partial().parse(request.params).storeId;
+			const orders = await service.getAllOrders(storeId);
 			return reply.send(orders);
 		} catch (error: any) {
 			const statusCode = reply.statusCode || 500;
@@ -106,8 +115,8 @@ class OrdersController {
 
 	async getOrdersByStatus(request: FastifyRequest<{ Params: Partial<ParamsType> }>, reply: FastifyReply) {
 		try {
-			const status = paramsSchema.partial().parse(request.params).status;
-			const order = await service.getOrdersByStatus(status);
+			const { status, storeId } = paramsSchema.partial().parse(request.params);
+			const order = await service.getOrdersByStatus(status, storeId);
 			return reply.send(order);
 		} catch (error: any) {
 			const statusCode = reply.statusCode || 500;
@@ -118,8 +127,8 @@ class OrdersController {
 
 	async createOrder(request: FastifyRequest<{ Params: Partial<ParamsType> }>, reply: FastifyReply) {
 		try {
-			const { customerId, paymentMethodId, value, products } = paramsSchema.partial().parse(request.body);
-			await service.createOrder(customerId, paymentMethodId, value, products);
+			const { customerId, paymentMethodId, value, products, storeId } = paramsSchema.partial().parse(request.body);
+			await service.createOrder(customerId, paymentMethodId, value, products, storeId);
 			return reply.status(201).send("Pedido criado com sucesso.");
 		} catch (error: any) {
 			const statusCode = reply.statusCode || 500;

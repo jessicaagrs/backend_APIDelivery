@@ -1,14 +1,19 @@
 import prismaClient from "../../../db/prisma";
 
 class OrdersRepository {
-	async getAllOrders() {
-		return await prismaClient.orders.findMany();
+	async getAllOrders(storeId: string) {
+		return await prismaClient.orders.findMany({
+			where: {
+				storeId,
+			},
+		});
 	}
 
-	async getOrdersByStatus(status: string) {
+	async getOrdersByStatus(status: string, storeId: string) {
 		return await prismaClient.orders.findMany({
 			where: {
 				status,
+				storeId,
 			},
 		});
 	}
@@ -53,7 +58,7 @@ class OrdersRepository {
 		});
 	}
 
-	async createOrder(customerId: string, paymentMethodId: string, status: string, value: number) {
+	async createOrder(customerId: string, paymentMethodId: string, status: string, value: number, storeId: string) {
 		return await prismaClient.orders.create({
 			data: {
 				customerId: customerId,
@@ -61,6 +66,7 @@ class OrdersRepository {
 				paymentMethodId: paymentMethodId,
 				status,
 				value,
+				storeId,
 			},
 		});
 	}

@@ -14,10 +14,19 @@ const controller = new OrdersController();
 
 export async function ordersRoutes(fastify: FastifyInstance, options: FastifyPluginOptions) {
 	fastify.get(
-		"/orders",
+		"/orders/all/:storeId",
 		{
 			schema: {
 				description: "Returns a list of orders.",
+				params: {
+					type: "object",
+					required: ["storeId"],
+					properties: {
+						storeId: {
+							type: "string",
+						},
+					},
+				},
 				tags: ["orders"],
 				response: {
 					200: OrdersListSchema,
@@ -55,16 +64,19 @@ export async function ordersRoutes(fastify: FastifyInstance, options: FastifyPlu
 	);
 
 	fastify.get(
-		"/orders/byStatus/:status",
+		"/orders/byStatus/:status/:storeId",
 		{
 			schema: {
-				description: "Returns a list of orders via a specific status.",
+				description: "Returns a list of orders via a specific status and store.",
 				tags: ["orders"],
 				params: {
 					type: "object",
-					required: ["status"],
+					required: ["status", "storeId"],
 					properties: {
 						status: {
+							type: "string",
+						},
+						storeId: {
 							type: "string",
 						},
 					},

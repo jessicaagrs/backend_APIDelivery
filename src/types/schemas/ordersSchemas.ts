@@ -12,6 +12,7 @@ const OrderSchema = Type.Object({
 	paymentMethodId: Type.String(),
 	value: Type.Number(),
 	status: Type.String(),
+	storeId: Type.String(),
 	createdAt: Type.String(),
 	updateAt: Type.String(),
 });
@@ -20,12 +21,13 @@ const OrderInsertSchema = Type.Object({
 	customerId: Type.String(),
 	paymentMethodId: Type.String(),
 	value: Type.Number(),
+	storeId: Type.String(),
 	products: Type.Array(ProductInsertSchema, { minItems: 1 }),
 });
 
-const OrderUpdateShopmanSchema = Type.Pick(OrderSchema, ["id", "status", "shopmanId", "products"]);
+const OrderUpdateShopmanSchema = Type.Pick(OrderSchema, ["id", "status", "shopmanId"]);
 
-const OrderUpdateCustomerSchema = Type.Omit(OrderSchema, ["customerId", "shopmanId", "createdAt", "updateAt"]);
+const OrderUpdateCustomerSchema = Type.Omit(OrderSchema, ["customerId", "shopmanId", "createdAt", "updateAt", "storeId"]);
 
 const OrdersListSchema = Type.Array(OrderSchema);
 

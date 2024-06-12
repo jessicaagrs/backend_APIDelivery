@@ -4,6 +4,7 @@ import CustomersRepository from "../../repositories/customers/customersRepositor
 import OrdersRepository from "../../repositories/orders/ordersRepository";
 import PaymentsMethodsRepository from "../../repositories/paymentsMethods/paymentsMethodsRepository";
 import ShopmansRepository from "../../repositories/shopmans/shopmansRepository";
+import StoresRepository from "../../repositories/stores/storesRepository";
 import ProductsOrderService from "../productsOrder/productsOrderService";
 
 const repository = new OrdersRepository();
@@ -11,10 +12,17 @@ const repositoryCustomer = new CustomersRepository();
 const repositoryPaymentMethod = new PaymentsMethodsRepository();
 const repositoryShopman = new ShopmansRepository();
 const productsOrderService = new ProductsOrderService();
+const storesRepository = new StoresRepository();
 
 class OrdersService {
-	async getAllOrders() {
-		return await repository.getAllOrders();
+	async getAllOrders(storeId: string | undefined) {
+		if (storeId == undefined) throw new Error("O Id da loja é obrigatório");
+
+		const storeExist = await storesRepository.getStoreById(storeId);
+
+		if (!storeExist) throw new Error("Loja não encontrada");
+
+		return await repository.getAllOrders(storeId);
 	}
 
 	async getOrderById(id: string | undefined) {
@@ -22,17 +30,34 @@ class OrdersService {
 		return await repository.getOrderById(id);
 	}
 
-	async getOrdersByStatus(status: string | undefined) {
-		if (status == undefined) throw new Error("O status do pedido é obrigatório");
-		return await repository.getOrdersByStatus(status);
+	async getOrdersByStatus(status: string | undefined, storeId: string | undefined) {
+		if (status == undefined || storeId == undefined) throw new Error("O status e o id do pedido é obrigatório");
+
+		const storeExist = await storesRepository.getStoreById(storeId);
+
+		if (!storeExist) throw new Error("Loja não encontrada");
+
+		return await repository.getOrdersByStatus(status, storeId);
 	}
 
-	async createOrder(customerId: string | undefined, paymentMethodId: string | undefined, value: number | undefined, products: ProductsOrderResponse[] | undefined) {
+	async createOrder(
+		customerId: string | undefined,
+		paymentMethodId: string | undefined,
+		value: number | undefined,
+		products: ProductsOrderResponse[] | undefined,
+		storeId: string | undefined
+	) {
 		if (customerId == undefined) throw new Error("O ID do cliente é obrigatório");
 
 		if (paymentMethodId == undefined) throw new Error("O ID do método de pagamento é obrigatório");
 
 		if (value == undefined) throw new Error("O valor total do pedido é obrigatório");
+
+		if (storeId == undefined) throw new Error("O id da loja é obrigatório");
+
+		const storeExist = await storesRepository.getStoreById(storeId);
+
+		if (!storeExist) throw new Error("Loja não encontrada");
 
 		let customer = await repositoryCustomer.getCustomerById(customerId);
 		if (customer == null) throw new Error("Não existe um cliente com o ID informado");
@@ -40,7 +65,13 @@ class OrdersService {
 		let paymentMethod = await repositoryPaymentMethod.getPaymentMethodById(paymentMethodId);
 		if (paymentMethod == null) throw new Error("Não existe um método de pagamento com o ID informado");
 
-		const newOrder = await repository.createOrder(customerId, paymentMethodId, StatusOrdersEnum.PENDING, value);
+		const newOrder = await repository.createOrder(
+			customerId,
+			paymentMethodId,
+			StatusOrdersEnum.PENDING,
+			value,
+			storeId
+		);
 		await productsOrderService.createProductsOrder(products, newOrder.id);
 	}
 
@@ -70,11 +101,7 @@ class OrdersService {
 		await repository.updateOrderStatus(id, paymentMethodId, status, value, order.shopmanId);
 	}
 
-	async updateOrderByShopman(
-		id: string | undefined,
-		shopmanId: string | undefined,
-		status: string | undefined
-	) {
+	async updateOrderByShopman(id: string | undefined, shopmanId: string | undefined, status: string | undefined) {
 		if (id == undefined) throw new Error("O ID do pedido é obrigatório");
 
 		if (shopmanId == undefined) throw new Error("O ID do vendedor é obrigatório");
