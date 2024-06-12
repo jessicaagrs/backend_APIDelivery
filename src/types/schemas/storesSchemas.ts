@@ -9,7 +9,12 @@ const storeSchema = Type.Object({
 	updateAt: Type.String(),
 });
 
-const insertStoreSchema = Type.Pick(storeSchema, ["cnpj", "corporateReason", "phone"]);
+const insertStoreSchema = Type.Object({
+	cnpj: Type.String(),
+	corporateReason: Type.String(),
+	phone: Type.String(),
+	acessPassword: Type.String(),
+});
 
 const updateStoreSchema = Type.Pick(storeSchema, ["id", "corporateReason", "phone"]);
 

@@ -57,3 +57,11 @@ export function decryptCustomerPassword(passwordEncrypt: string) {
 
 	return decrypted.toString();
 }
+
+export function validateAcessPassword(acessPassword: string) {
+	if (acessPassword === process.env.ACESS_PASSWORD) {
+		return true;
+	}
+
+	return false;
+}

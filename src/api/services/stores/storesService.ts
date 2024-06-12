@@ -22,9 +22,14 @@ class StoresService {
 		return store;
 	}
 
-	async createStore(cnpj: string | undefined, corporateReason: string | undefined, phone: string | undefined) {
-		if (cnpj == undefined || corporateReason == undefined || phone == undefined)
-			throw new Error("O cnpj, telefone e a razão social da loja são obrigatórios");
+	async createStore(
+		cnpj: string | undefined,
+		corporateReason: string | undefined,
+		phone: string | undefined,
+		acessPassword: string | undefined
+	) {
+		if (cnpj == undefined || corporateReason == undefined || phone == undefined || acessPassword == undefined)
+			throw new Error("O cnpj, telefone, a palavra passe e a razão social da loja são obrigatórios");
 
 		const cnpjExist = await repository.getStoreByCNPJ(cnpj);
 

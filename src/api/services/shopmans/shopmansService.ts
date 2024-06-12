@@ -1,12 +1,21 @@
+import { decryptCustomerPassword, encryptCustomerPassword } from "../../../utils/formatter";
 import OrdersRepository from "../../repositories/orders/ordersRepository";
 import ShopmansRepository from "../../repositories/shopmans/shopmansRepository";
+import StoresRepository from "../../repositories/stores/storesRepository";
 
 const repository = new ShopmansRepository();
 const repositoryOrders = new OrdersRepository();
+const repositoryStores = new StoresRepository();
 
 class ShopmansService {
-	async getAllShopmans() {
-		const shopmans = await repository.getAllShopmans();
+	async getAllShopmans(storeId: string | undefined) {
+		if (!storeId) throw new Error("O id da loja deve ser informado.");
+
+		const storeExist = await repositoryStores.getStoreById(storeId);
+
+		if (!storeExist) throw new Error("Loja não encontrada.");
+
+		const shopmans = await repository.getAllShopmans(storeId);
 
 		return shopmans;
 	}
@@ -39,9 +48,23 @@ class ShopmansService {
 		return shopman;
 	}
 
-	async createShopman(name: string | undefined, email: string | undefined, role: string | undefined) {
-		if (name === undefined || email === undefined || role === undefined) {
-			throw new Error("Para criar um vendedor, o nome, email e qual o tipo de autorização devem ser informados.");
+	async createShopman(
+		name: string | undefined,
+		email: string | undefined,
+		role: string | undefined,
+		password: string | undefined,
+		storeId: string | undefined
+	) {
+		if (
+			name === undefined ||
+			email === undefined ||
+			role === undefined ||
+			password === undefined ||
+			storeId === undefined
+		) {
+			throw new Error(
+				"Para criar um vendedor, o nome, email, senha, id da loja e qual o tipo de autorização devem ser informados."
+			);
 		}
 
 		const shopman = await repository.getShopmanByEmail(email);
@@ -50,7 +73,17 @@ class ShopmansService {
 			throw new Error("Já existe um vendedor com este email.");
 		}
 
-		await repository.createShopman(name, email, role);
+		const storeExist = await repositoryStores.getStoreById(storeId);
+
+		if (!storeExist) throw new Error("Loja não encontrada.");
+
+		const roleInStore = await repository.getShopmanByRoleInStore(role, storeId);
+
+		if(roleInStore) throw new Error("Já existe um administrador na loja informada.");
+
+		const passwordEncrypt = encryptCustomerPassword(password);
+
+		await repository.createShopman(name, email, role, passwordEncrypt, storeId);
 	}
 
 	async updateShopman(
@@ -58,11 +91,11 @@ class ShopmansService {
 		name: string | undefined,
 		email: string | undefined,
 		role: string | undefined,
-		status: boolean | undefined
+		password: string | undefined
 	) {
-		if (name === undefined || email === undefined || role === undefined || id === undefined) {
+		if (name === undefined || email === undefined || role === undefined || id === undefined || password === undefined) {
 			throw new Error(
-				"Para atualizar um vendedor, o nome, email, qual o tipo de autorização e o id devem ser informados."
+				"Para atualizar um vendedor, o nome, email, senha, status, o tipo de autorização e o id devem ser informados."
 			);
 		}
 
@@ -78,7 +111,11 @@ class ShopmansService {
 			throw new Error("Já existe um vendedor com este email.");
 		}
 
-		await repository.updateShopman(id, name, email, role, status ?? shopman.status);
+		const passwordDecrypt = decryptCustomerPassword(shopman.password);
+
+		password != passwordDecrypt ? (password = encryptCustomerPassword(password)) : (password = shopman.password);
+
+		await repository.updateShopman(id, name, email, role, password);
 	}
 
 	async deleteShopman(id: string | undefined) {
@@ -95,7 +132,8 @@ class ShopmansService {
 		const shopmanInOrder = await repositoryOrders.getOrderByShopman(shopman.id);
 
 		if (shopmanInOrder) {
-			throw new Error("Vendedor não pode ser deletado, pois está vinculado a um pedido.");
+			await repository.disableShopman(id, false);
+			return;
 		}
 
 		await repository.deleteShopman(id);

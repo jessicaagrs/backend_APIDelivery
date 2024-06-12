@@ -8,11 +8,11 @@ import { productsOrderRoutes } from "./routes/productsOrder/productsOrderRoutes"
 import { storesRoutes } from "./routes/stores/storesRoutes";
 
 export async function routes(fastify: FastifyInstance, options: FastifyPluginOptions) {
+	fastify.register(storesRoutes);
 	fastify.register(customersRoutes);
-	fastify.register(paymentsMethodsRoutes);
 	fastify.register(shopmansRoutes);
+	fastify.register(paymentsMethodsRoutes);
 	fastify.register(productsRoutes);
 	fastify.register(ordersRoutes);
 	fastify.register(productsOrderRoutes);
-	fastify.register(storesRoutes);
 }

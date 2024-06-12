@@ -2,6 +2,7 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 import { ApiError } from "../../../error/apiError";
 import StoresService from "../../services/stores/storesService";
+import { validateAcessPassword } from "../../../utils/formatter";
 
 const service = new StoresService();
 
@@ -30,10 +31,22 @@ const paramsSchema = z.object({
 		.min(10, {
 			message: "O telefone deve ter no mínimo 10 caracteres, considerando o DD",
 		}),
-	corporateReason: z.string({
-		required_error: "O id da loja é obrigatório",
-		invalid_type_error: "O id da loja deve ser uma string",
-	}),
+	corporateReason: z
+		.string({
+			required_error: "O id da loja é obrigatório",
+			invalid_type_error: "O id da loja deve ser uma string",
+		})
+		.min(10, {
+			message: "O nome da loja deve ter no mínimo 10 caracteres",
+		}),
+	acessPassword: z
+		.string({
+			required_error: "A palavra passe para acesso a plataforma é obrigatória",
+			invalid_type_error: "A palavra passe deve ser uma string",
+		})
+		.refine((value) => validateAcessPassword(value), {
+			message: "A palavra passe está incorreta, tente novamente. Caso ainda não tenha a sua palavra passe, entre em contato com o administrador da plataforma jessicaag.rs@gmail.com.",
+		}),
 });
 
 type ParamsType = z.infer<typeof paramsSchema>;
@@ -64,8 +77,8 @@ class StoresController {
 
 	async createStore(request: FastifyRequest<{ Params: Partial<ParamsType> }>, reply: FastifyReply) {
 		try {
-			const { cnpj, corporateReason, phone } = paramsSchema.partial().parse(request.body);
-			await service.createStore(cnpj, corporateReason, phone);
+			const { cnpj, corporateReason, phone, acessPassword } = paramsSchema.partial().parse(request.body);
+			await service.createStore(cnpj, corporateReason, phone, acessPassword);
 			return reply.status(201).send("Loja criada com sucesso.");
 		} catch (error: any) {
 			const statusCode = reply.statusCode || 500;

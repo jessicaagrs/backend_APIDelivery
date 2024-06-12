@@ -43,13 +43,30 @@ const paramsSchema = z.object({
 		required_error: "O status do vendedor é obrigatório",
 		invalid_type_error: "O cargo do vendedor deve ser false ou true",
 	}),
+	password: z
+		.string({
+			required_error: "A senha é obrigatória",
+			invalid_type_error: "A senha do cliente deve ser uma string",
+		})
+		.min(8, {
+			message: "A senha deve ter no mínimo 8 caracteres",
+		}),
+	storeId: z
+		.string({
+			required_error: "O id da loja é obrigatório",
+			invalid_type_error: "O id da loja deve ser uma string",
+		})
+		.cuid({
+			message: "O id da loja deve ser um CUID",
+		})
 });
 type ParamsType = z.infer<typeof paramsSchema>;
 
 class ShopmansController {
 	async getAllShopmans(request: FastifyRequest, reply: FastifyReply) {
 		try {
-			const shopmans = await service.getAllShopmans();
+			const storeId = paramsSchema.partial().parse(request.params).storeId;
+			const shopmans = await service.getAllShopmans(storeId);
 			return reply.send(shopmans);
 		} catch (error: any) {
 			const statusCode = reply.statusCode || 500;
@@ -72,8 +89,8 @@ class ShopmansController {
 
 	async createShopman(request: FastifyRequest<{ Params: Partial<ParamsType> }>, reply: FastifyReply) {
 		try {
-			const { name, email, role } = paramsSchema.partial().parse(request.body);
-			await service.createShopman(name, email, role);
+			const { name, email, role, password, storeId } = paramsSchema.partial().parse(request.body);
+			await service.createShopman(name, email, role, password, storeId);
 			return reply.status(201).send("Vendedor criado com sucesso.");
 		} catch (error: any) {
 			const statusCode = reply.statusCode || 500;
@@ -84,8 +101,8 @@ class ShopmansController {
 
 	async updateShopman(request: FastifyRequest<{ Params: Partial<ParamsType> }>, reply: FastifyReply) {
 		try {
-			const { id, name, email, role, status } = paramsSchema.partial().parse(request.body);
-			await service.updateShopman(id, name, email, role, status);
+			const { id, name, email, role, password } = paramsSchema.partial().parse(request.body);
+			await service.updateShopman(id, name, email, role, password);
 			return reply.status(200).send("Vendedor atualizado com sucesso.");
 		} catch (error: any) {
 			const statusCode = reply.statusCode || 500;

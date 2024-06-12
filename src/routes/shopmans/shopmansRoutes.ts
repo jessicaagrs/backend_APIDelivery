@@ -13,10 +13,19 @@ const controller = new ShopmansController();
 
 export async function shopmansRoutes(fastify: FastifyInstance, options: FastifyPluginOptions) {
 	fastify.get(
-		"/shopmans",
+		"/shopmans/all/:storeId",
 		{
 			schema: {
 				description: "Returns a list of shopmans.",
+				params: {
+					type: "object",
+					required: ["storeId"],
+					properties: {
+						storeId: {
+							type: "string",
+						},
+					},
+				},
 				tags: ["shopmans"],
 				response: {
 					200: shopmanListSchema,
