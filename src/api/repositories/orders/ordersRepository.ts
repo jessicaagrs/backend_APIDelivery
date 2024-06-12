@@ -1,7 +1,7 @@
 import prismaClient from "../../../db/prisma";
 
 class OrdersRepository {
-	async getAllOrders(storeId: string) {
+	async getAllOrdersByStore(storeId: string) {
 		return await prismaClient.orders.findMany({
 			where: {
 				storeId,
@@ -9,11 +9,30 @@ class OrdersRepository {
 		});
 	}
 
-	async getOrdersByStatus(status: string, storeId: string) {
+	async getAllOrdersByCustomer(storeId: string, customerId: string) {
+		return await prismaClient.orders.findMany({
+			where: {
+				storeId,
+				customerId
+			},
+		});
+	}
+
+	async getOrdersByStoreForStatus(status: string, storeId: string) {
 		return await prismaClient.orders.findMany({
 			where: {
 				status,
 				storeId,
+			},
+		});
+	}
+
+	async getOrdersByCustomerForStatus(status: string, storeId: string, customerId : string) {
+		return await prismaClient.orders.findMany({
+			where: {
+				status,
+				storeId,
+				customerId
 			},
 		});
 	}

@@ -15,14 +15,30 @@ const productsOrderService = new ProductsOrderService();
 const storesRepository = new StoresRepository();
 
 class OrdersService {
-	async getAllOrders(storeId: string | undefined) {
+	async getAllOrdersByStore(storeId: string | undefined) {
 		if (storeId == undefined) throw new Error("O Id da loja é obrigatório");
 
 		const storeExist = await storesRepository.getStoreById(storeId);
 
 		if (!storeExist) throw new Error("Loja não encontrada");
 
-		return await repository.getAllOrders(storeId);
+		return await repository.getAllOrdersByStore(storeId);
+	}
+
+	async getAllOrdersByCustomer(storeId: string | undefined, customerId: string | undefined) {
+		if (storeId == undefined) throw new Error("O Id da loja é obrigatório");
+
+		if (customerId == undefined) throw new Error("O Id do cliente é obrigatório");
+
+		const storeExist = await storesRepository.getStoreById(storeId);
+
+		if (!storeExist) throw new Error("Loja não encontrada");
+
+		const customerExist = await repositoryCustomer.getCustomerById(customerId);
+
+		if (!customerExist) throw new Error("Cliente não encontrado");
+
+		return await repository.getAllOrdersByCustomer(storeId, customerId);
 	}
 
 	async getOrderById(id: string | undefined) {
@@ -30,14 +46,33 @@ class OrdersService {
 		return await repository.getOrderById(id);
 	}
 
-	async getOrdersByStatus(status: string | undefined, storeId: string | undefined) {
+	async getOrdersByStoreForStatus(status: string | undefined, storeId: string | undefined) {
 		if (status == undefined || storeId == undefined) throw new Error("O status e o id do pedido é obrigatório");
 
 		const storeExist = await storesRepository.getStoreById(storeId);
 
 		if (!storeExist) throw new Error("Loja não encontrada");
 
-		return await repository.getOrdersByStatus(status, storeId);
+		return await repository.getOrdersByStoreForStatus(status, storeId);
+	}
+
+	async getOrdersByCustomerForStatus(
+		status: string | undefined,
+		storeId: string | undefined,
+		customerId: string | undefined
+	) {
+		if (status == undefined || storeId == undefined || customerId == undefined)
+			throw new Error("O status, id do cliente e o id do pedido é obrigatório");
+
+		const storeExist = await storesRepository.getStoreById(storeId);
+
+		if (!storeExist) throw new Error("Loja não encontrada");
+
+		const customerExist = await repositoryCustomer.getCustomerById(customerId);
+
+		if (!customerExist) throw new Error("Cliente não encontrado");
+
+		return await repository.getOrdersByCustomerForStatus(status, storeId, customerId);
 	}
 
 	async createOrder(

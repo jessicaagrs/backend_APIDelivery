@@ -89,10 +89,22 @@ const paramsSchema = z.object({
 type ParamsType = z.infer<typeof paramsSchema>;
 
 class OrdersController {
-	async getAllOrders(request: FastifyRequest, reply: FastifyReply) {
+	async getAllOrdersByStore(request: FastifyRequest, reply: FastifyReply) {
 		try {
 			const storeId = paramsSchema.partial().parse(request.params).storeId;
-			const orders = await service.getAllOrders(storeId);
+			const orders = await service.getAllOrdersByStore(storeId);
+			return reply.send(orders);
+		} catch (error: any) {
+			const statusCode = reply.statusCode || 500;
+			const err = new ApiError(statusCode, error.message);
+			reply.status(err.statusCode).send(err);
+		}
+	}
+
+	async getAllOrdersByCustomer(request: FastifyRequest, reply: FastifyReply) {
+		try {
+			const { storeId, customerId } = paramsSchema.partial().parse(request.params);
+			const orders = await service.getAllOrdersByCustomer(storeId, customerId);
 			return reply.send(orders);
 		} catch (error: any) {
 			const statusCode = reply.statusCode || 500;
@@ -113,10 +125,22 @@ class OrdersController {
 		}
 	}
 
-	async getOrdersByStatus(request: FastifyRequest<{ Params: Partial<ParamsType> }>, reply: FastifyReply) {
+	async getOrdersByStoreForStatus(request: FastifyRequest<{ Params: Partial<ParamsType> }>, reply: FastifyReply) {
 		try {
 			const { status, storeId } = paramsSchema.partial().parse(request.params);
-			const order = await service.getOrdersByStatus(status, storeId);
+			const order = await service.getOrdersByStoreForStatus(status, storeId);
+			return reply.send(order);
+		} catch (error: any) {
+			const statusCode = reply.statusCode || 500;
+			const err = new ApiError(statusCode, error.message);
+			reply.status(err.statusCode).send(err);
+		}
+	}
+
+	async getOrdersByCustomerForStatus(request: FastifyRequest<{ Params: Partial<ParamsType> }>, reply: FastifyReply) {
+		try {
+			const { status, storeId, customerId } = paramsSchema.partial().parse(request.params);
+			const order = await service.getOrdersByCustomerForStatus(status, storeId, customerId);
 			return reply.send(order);
 		} catch (error: any) {
 			const statusCode = reply.statusCode || 500;

@@ -14,10 +14,10 @@ const controller = new OrdersController();
 
 export async function ordersRoutes(fastify: FastifyInstance, options: FastifyPluginOptions) {
 	fastify.get(
-		"/orders/all/:storeId",
+		"/orders/byStore/all/:storeId",
 		{
 			schema: {
-				description: "Returns a list of orders.",
+				description: "Returns a list of orders by store.",
 				params: {
 					type: "object",
 					required: ["storeId"],
@@ -35,7 +35,35 @@ export async function ordersRoutes(fastify: FastifyInstance, options: FastifyPlu
 				},
 			},
 		},
-		controller.getAllOrders
+		controller.getAllOrdersByStore
+	);
+
+	fastify.get(
+		"/orders/byCustomer/all/:customerId/:storeId",
+		{
+			schema: {
+				description: "Returns a list of orders by customer.",
+				params: {
+					type: "object",
+					required: ["storeId", "customerId"],
+					properties: {
+						storeId: {
+							type: "string",
+						},
+						customerId: {
+							type: "string",
+						}
+					},
+				},
+				tags: ["orders"],
+				response: {
+					200: OrdersListSchema,
+					400: ErrorSchema,
+					500: ErrorSchema,
+				},
+			},
+		},
+		controller.getAllOrdersByCustomer
 	);
 
 	fastify.get(
@@ -64,7 +92,7 @@ export async function ordersRoutes(fastify: FastifyInstance, options: FastifyPlu
 	);
 
 	fastify.get(
-		"/orders/byStatus/:status/:storeId",
+		"/orders/byStoreForStatus/:status/:storeId",
 		{
 			schema: {
 				description: "Returns a list of orders via a specific status and store.",
@@ -88,7 +116,38 @@ export async function ordersRoutes(fastify: FastifyInstance, options: FastifyPlu
 				},
 			},
 		},
-		controller.getOrdersByStatus
+		controller.getOrdersByStoreForStatus
+	);
+
+	fastify.get(
+		"/orders/byCustomerForStatus/:status/:customerId/:storeId",
+		{
+			schema: {
+				description: "Returns a list of orders via a specific status and customer.",
+				tags: ["orders"],
+				params: {
+					type: "object",
+					required: ["status", "storeId", "customerId"],
+					properties: {
+						status: {
+							type: "string",
+						},
+						storeId: {
+							type: "string",
+						},
+						customerId: {
+							type: "string",
+						}
+					},
+				},
+				response: {
+					200: OrdersListSchema,
+					400: ErrorSchema,
+					500: ErrorSchema,
+				},
+			},
+		},
+		controller.getOrdersByCustomerForStatus
 	);
 
 	fastify.post(
