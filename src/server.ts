@@ -18,17 +18,27 @@ const start = async () => {
 				url: "https://github.com/jessicaagrs/backend_APIDelivery",
 				description: "Find more info here",
 			},
-		}
+			components: {
+				securitySchemes: {
+					bearerAuth: {
+						type: "http",
+						scheme: "bearer",
+						description: "Input your token here",
+						bearerFormat: "JWT",
+					},
+				},
+			},
+		},
 	});
 	await app.register(swaggerUI, {
-		routePrefix: "/",
+		routePrefix: "/docs",
 	});
 	await app.register(cors);
 	await app.register(routes, { prefix: "/v1" });
 
 	try {
 		await app.listen({ port: 3333 });
-	} catch (err) {												
+	} catch (err) {
 		app.log.error(err);
 		process.exit(1);
 	}

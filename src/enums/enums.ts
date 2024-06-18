@@ -14,3 +14,8 @@ export enum StatusOrdersEnum {
 	COMPLETED = "Concluido",	
 	CANCELED = "Cancelado",
 }
+
+export enum TypeLoginEnum {
+	CUSTOMER = "C",
+	SHOPMAN = "S",
+}

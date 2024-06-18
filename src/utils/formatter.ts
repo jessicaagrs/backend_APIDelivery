@@ -1,4 +1,4 @@
-import { RoleEnum, StatusOrdersEnum, TypeProductEnum } from "../enums/enums";
+import { RoleEnum, StatusOrdersEnum, TypeLoginEnum, TypeProductEnum } from "../enums/enums";
 import crypto from "crypto";
 
 export function validateStatusOrders(status: string): boolean {
@@ -63,5 +63,14 @@ export function validateAcessPassword(acessPassword: string) {
 		return true;
 	}
 
+	return false;
+}
+
+export function validateTypeLogin(typeLogin: string) {
+	for (const value in TypeLoginEnum) {
+		if (TypeLoginEnum[value as keyof typeof TypeLoginEnum] === typeLogin) {
+			return true;
+		}
+	}
 	return false;
 }
