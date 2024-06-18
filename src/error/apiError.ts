@@ -2,6 +2,7 @@ export class ApiError extends Error {
 	statusCode: number;
 
 	constructor(statusCode: number, message: string) {
+		console.log(message)
 		const errorMessage = extractErrorMessageFromZod(message);
 		super(errorMessage);
 		this.statusCode = statusCode;

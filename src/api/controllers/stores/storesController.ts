@@ -45,7 +45,8 @@ const paramsSchema = z.object({
 			invalid_type_error: "A palavra passe deve ser uma string",
 		})
 		.refine((value) => validateAcessPassword(value), {
-			message: "A palavra passe está incorreta, tente novamente. Caso ainda não tenha a sua palavra passe, entre em contato com o administrador da plataforma jessicaag.rs@gmail.com.",
+			message:
+				"A palavra passe está incorreta, tente novamente. Caso ainda não tenha a sua palavra passe, entre em contato com o administrador da plataforma jessicaag.rs@gmail.com.",
 		}),
 });
 

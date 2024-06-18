@@ -1,12 +1,30 @@
-import Fastify from "fastify";
+import Fastify, { FastifyReply, FastifyRequest } from "fastify";
 import { routes } from "./app";
 import cors from "@fastify/cors";
 import swagger from "@fastify/swagger";
 import swaggerUI from "@fastify/swagger-ui";
+import jwt from "@fastify/jwt";
+import "./types/fastify/fastify";
 
-const app = Fastify({ logger: false });
+const app = Fastify({ logger: true });
 
 const start = async () => {
+	await app.register(jwt, {
+		secret: process.env.SECRET_JWT as string,
+	});
+
+	app.decorate("authenticate", async function (request: FastifyRequest, reply: FastifyReply) {
+		try {
+			await request.jwtVerify();
+		} catch (error) {
+			reply.status(401).send({
+				statusCode: 401,
+				error: "Unauthorized",
+				message: "Não autorizado, faça login e utilize o token",
+			});
+		}
+	});
+
 	await app.register(swagger, {
 		openapi: {
 			info: {
@@ -14,6 +32,7 @@ const start = async () => {
 				description: "API developed by JessAg",
 				version: "0.0.1",
 			},
+			security: [{ bearerAuth: [] }],
 			externalDocs: {
 				url: "https://github.com/jessicaagrs/backend_APIDelivery",
 				description: "Find more info here",
@@ -21,18 +40,20 @@ const start = async () => {
 			components: {
 				securitySchemes: {
 					bearerAuth: {
-						type: "http",
-						scheme: "bearer",
-						description: "Input your token here",
-						bearerFormat: "JWT",
+						type: "apiKey",
+						name: "Authorization",
+						in: "header",
+						description: "Bearer token",
 					},
 				},
 			},
 		},
 	});
+
 	await app.register(swaggerUI, {
-		routePrefix: "/docs",
+		routePrefix: "/",
 	});
+
 	await app.register(cors);
 	await app.register(routes, { prefix: "/v1" });
 

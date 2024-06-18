@@ -1,4 +1,4 @@
-import { FastifyReply, FastifyRequest } from "fastify";
+import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 import { ApiError } from "../../../error/apiError";
 import { validateTypeLogin } from "../../../utils/formatter";
@@ -36,12 +36,13 @@ const paramsSchema = z.object({
 type ParamsType = z.infer<typeof paramsSchema>;
 
 class AuthController {
-	async Login(request: FastifyRequest<{ Params: Partial<ParamsType> }>, reply: FastifyReply) {
+	async Login(app: FastifyInstance, request: FastifyRequest<{ Params: Partial<ParamsType> }>, reply: FastifyReply) {
 		try {
 			const { email, password, typeLogin } = paramsSchema.partial().parse(request.body);
 			const response = await service.Login(email, password, typeLogin);
-			
-			console.log(response)
+			response.token = app.jwt.sign(response.user);
+
+			console.log(response);
 			return reply.send(response);
 		} catch (error: any) {
 			const statusCode = reply.statusCode || 500;

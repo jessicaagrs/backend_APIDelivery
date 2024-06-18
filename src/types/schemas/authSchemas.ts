@@ -15,6 +15,4 @@ const responseLoginSchema = Type.Object({
 	}),
 });
 
-const messageErrorResponse = Type.Literal("Unauthorized message");
-
-export { loginSchema, responseLoginSchema, messageErrorResponse };
+export { loginSchema, responseLoginSchema };
