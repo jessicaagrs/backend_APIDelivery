@@ -23,7 +23,7 @@ Status do Projeto: :heavy_check_mark: <!-- > :heavy_check_mark:--> Concluído <!
 
 :small_blue_diamond: [Como rodar a aplicação](#como-rodar-a-aplicação-arrow_forward)
 
-:small_blue_diamond: [Licença](#licença)
+:small_blue_diamond: [Licença](#licença-bookmark)
 
 
 
