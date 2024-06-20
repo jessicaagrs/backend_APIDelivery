@@ -136,3 +136,4 @@ testsProducts.http
 testsOrders.http
 .vscode/extensions.json
 notes.md
+.vercel

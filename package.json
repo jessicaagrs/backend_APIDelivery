@@ -5,9 +5,8 @@
   "main": "server.tsx",
   "scripts": {
     "dev": "tsx watch src/server.ts",
-    "build": "tsc --build --output public",
-    "clean": "tsc --build --clean",
-    "start": "tsc && node dist/server.js"
+    "build": "tsc",
+    "start": "node dist/server.js"
   },
   "keywords": [],
   "author": "",

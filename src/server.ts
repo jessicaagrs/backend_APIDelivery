@@ -11,7 +11,6 @@ const app = Fastify({ logger: true });
 const start = async () => {
 	await app.register(jwt, {
 		secret: process.env.SECRET_JWT as string,
-		
 	});
 
 	app.decorate("authenticate", async function (request: FastifyRequest, reply: FastifyReply) {
@@ -59,7 +58,7 @@ const start = async () => {
 	await app.register(routes, { prefix: "/v1" });
 
 	try {
-		await app.listen({ port: 3333 });
+		await app.listen({ port: Number(process.env.PORT as string) });
 	} catch (err) {
 		app.log.error(err);
 		process.exit(1);
