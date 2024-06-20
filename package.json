@@ -3,9 +3,11 @@
   "version": "1.0.0",
   "description": "",
   "main": "server.tsx",
-  "type": "module",
   "scripts": {
-    "dev": "tsx watch src/server.ts"
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc --build",
+    "clean": "tsc --build --clean",
+    "start": "tsc && node dist/server.js"
   },
   "keywords": [],
   "author": "",
