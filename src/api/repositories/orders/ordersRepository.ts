@@ -13,7 +13,7 @@ class OrdersRepository {
 		return await prismaClient.orders.findMany({
 			where: {
 				storeId,
-				customerId
+				customerId,
 			},
 		});
 	}
@@ -27,12 +27,12 @@ class OrdersRepository {
 		});
 	}
 
-	async getOrdersByCustomerForStatus(status: string, storeId: string, customerId : string) {
+	async getOrdersByCustomerForStatus(status: string, storeId: string, customerId: string) {
 		return await prismaClient.orders.findMany({
 			where: {
 				status,
 				storeId,
-				customerId
+				customerId,
 			},
 		});
 	}

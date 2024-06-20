@@ -1,4 +1,4 @@
-import { FastifyInstance, FastifyPluginOptions } from "fastify";
+import { FastifyInstance, FastifyPluginOptions, FastifyReply, FastifyRequest } from "fastify";
 import StoresController from "../../api/controllers/stores/storesController";
 import { ErrorSchema } from "../../types/schemas/errorSchema";
 import {
@@ -23,15 +23,19 @@ export async function storesRoutes(fastify: FastifyInstance, options: FastifyPlu
 					200: storeListSchema,
 					400: ErrorSchema,
 					401: ErrorSchema,
+					404: ErrorSchema,
 					500: ErrorSchema,
 				},
 			},
 		},
-		controller.getAllStores
+		async (request: FastifyRequest<any>, reply: FastifyReply) => {
+			await controller.getAllStores(request, reply);
+		}
 	);
 	fastify.get(
 		"/stores/:id",
 		{
+			preValidation: fastify.authenticate,
 			schema: {
 				description: "Returns a store via a specific id.",
 				params: {
@@ -47,15 +51,20 @@ export async function storesRoutes(fastify: FastifyInstance, options: FastifyPlu
 				response: {
 					200: storeSchema,
 					400: ErrorSchema,
+					401: ErrorSchema,
+					404: ErrorSchema,
 					500: ErrorSchema,
 				},
 			},
 		},
-		controller.getStoreById
+		async (request: FastifyRequest<any>, reply: FastifyReply) => {
+			await controller.getStoreById(request, reply);
+		}
 	);
 	fastify.post(
 		"/stores",
 		{
+			preValidation: fastify.authenticate,
 			schema: {
 				description: "Add a new store.",
 				tags: ["stores"],
@@ -63,15 +72,20 @@ export async function storesRoutes(fastify: FastifyInstance, options: FastifyPlu
 				response: {
 					201: storeMessageResponse,
 					400: ErrorSchema,
+					401: ErrorSchema,
+					404: ErrorSchema,
 					500: ErrorSchema,
 				},
 			},
 		},
-		controller.createStore
+		async (request: FastifyRequest<any>, reply: FastifyReply) => {
+			await controller.createStore(request, reply);
+		}
 	);
 	fastify.put(
 		"/stores",
 		{
+			preValidation: fastify.authenticate,
 			schema: {
 				description: "Updates store data.",
 				tags: ["stores"],
@@ -79,15 +93,20 @@ export async function storesRoutes(fastify: FastifyInstance, options: FastifyPlu
 				response: {
 					200: storeMessageResponse,
 					400: ErrorSchema,
+					401: ErrorSchema,
+					404: ErrorSchema,
 					500: ErrorSchema,
 				},
 			},
 		},
-		controller.updateStore
+		async (request: FastifyRequest<any>, reply: FastifyReply) => {
+			await controller.updateStore(request, reply);
+		}
 	);
 	fastify.delete(
 		"/stores/:id",
 		{
+			preValidation: fastify.authenticate,
 			schema: {
 				description: "Removes a store.",
 				tags: ["stores"],
@@ -103,10 +122,14 @@ export async function storesRoutes(fastify: FastifyInstance, options: FastifyPlu
 				response: {
 					200: storeMessageResponse,
 					400: ErrorSchema,
+					401: ErrorSchema,
+					404: ErrorSchema,
 					500: ErrorSchema,
 				},
 			},
 		},
-		controller.deleteStore
+		async (request: FastifyRequest<any>, reply: FastifyReply) => {
+			await controller.deleteStore(request, reply);
+		}
 	);
 }

@@ -38,16 +38,12 @@ class PaymentsMethodsService {
 		await repository.createPaymentMethod(description, storeId);
 	}
 
-	async updatePaymentMethod(description: string | undefined, id: string | undefined, storeId: string | undefined) {
-		if (description === undefined || id === undefined || storeId === undefined) {
+	async updatePaymentMethod(description: string | undefined, id: string | undefined) {
+		if (description === undefined || id === undefined) {
 			throw new Error(
-				"Para atualizar um método de pagamento, a descrição, id da loja e o id da forma de pagamento devem ser informados."
+				"Para atualizar um método de pagamento, a descrição e o id da forma de pagamento devem ser informados."
 			);
 		}
-
-		const storeExist = await repositoryStore.getStoreById(storeId);
-
-		if (!storeExist) throw new Error("Loja não encontrada.");
 
 		const payment = await repository.getPaymentMethodById(id);
 
@@ -55,7 +51,7 @@ class PaymentsMethodsService {
 			throw new Error("Método de pagamento não encontrado.");
 		}
 
-		await repository.updatePaymentMethod(id, description, storeId);
+		await repository.updatePaymentMethod(id, description);
 	}
 
 	async deletePaymentMethod(id: string | undefined) {

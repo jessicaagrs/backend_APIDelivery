@@ -11,6 +11,7 @@ const app = Fastify({ logger: true });
 const start = async () => {
 	await app.register(jwt, {
 		secret: process.env.SECRET_JWT as string,
+		
 	});
 
 	app.decorate("authenticate", async function (request: FastifyRequest, reply: FastifyReply) {
@@ -20,7 +21,7 @@ const start = async () => {
 			reply.status(401).send({
 				statusCode: 401,
 				error: "Unauthorized",
-				message: "Não autorizado, faça login e utilize o token",
+				message: "Não autorizado, login não efetuado ou token expirado",
 			});
 		}
 	});

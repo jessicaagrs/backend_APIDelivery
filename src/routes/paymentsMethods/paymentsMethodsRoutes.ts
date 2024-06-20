@@ -1,10 +1,11 @@
-import { FastifyInstance, FastifyPluginOptions } from "fastify";
+import { FastifyInstance, FastifyPluginOptions, FastifyReply, FastifyRequest } from "fastify";
 import PaymentsMethodsController from "../../api/controllers/paymentsMethods/paymentsMethodsController";
 import {
 	PaymentMethodSchema,
 	paymentMethodInsertSchema,
 	paymentMethodListSchema,
 	paymentMethodMessageResponse,
+	paymentMethodUpdateSchema,
 } from "../../types/schemas/paymentMethodSchema";
 import { ErrorSchema } from "../../types/schemas/errorSchema";
 
@@ -14,6 +15,7 @@ export async function paymentsMethodsRoutes(fastify: FastifyInstance, options: F
 	fastify.get(
 		"/paymentsmethods/:storeId",
 		{
+			preValidation: fastify.authenticate,
 			schema: {
 				description:
 					"Returns a list of payment methods. If the store has not yet registered, the default payment methods will be generated the first time.",
@@ -30,16 +32,21 @@ export async function paymentsMethodsRoutes(fastify: FastifyInstance, options: F
 				response: {
 					200: paymentMethodListSchema,
 					400: ErrorSchema,
+					401: ErrorSchema,
+					404: ErrorSchema,
 					500: ErrorSchema,
 				},
 			},
 		},
-		controller.getAllPaymentsMethods
+		async (request: FastifyRequest<any>, reply: FastifyReply) => {
+			await controller.getAllPaymentsMethods(request, reply);
+		}
 	);
 
 	fastify.post(
 		"/paymentsmethods",
 		{
+			preValidation: fastify.authenticate,
 			schema: {
 				description: "Add a new payment method.",
 				tags: ["payments methods"],
@@ -47,33 +54,43 @@ export async function paymentsMethodsRoutes(fastify: FastifyInstance, options: F
 				response: {
 					201: paymentMethodMessageResponse,
 					400: ErrorSchema,
+					401: ErrorSchema,
+					404: ErrorSchema,
 					500: ErrorSchema,
 				},
 			},
 		},
-		controller.createPaymentMethod
+		async (request: FastifyRequest<any>, reply: FastifyReply) => {
+			await controller.createPaymentMethod(request, reply);
+		}
 	);
 
 	fastify.put(
 		"/paymentsmethods",
 		{
+			preValidation: fastify.authenticate,
 			schema: {
 				description: "Updates payment method data.",
 				tags: ["payments methods"],
-				body: PaymentMethodSchema,
+				body: paymentMethodUpdateSchema,
 				response: {
 					200: paymentMethodMessageResponse,
 					400: ErrorSchema,
+					401: ErrorSchema,
+					404: ErrorSchema,
 					500: ErrorSchema,
 				},
 			},
 		},
-		controller.updatePaymentMethod
+		async (request: FastifyRequest<any>, reply: FastifyReply) => {
+			await controller.updatePaymentMethod(request, reply);
+		}
 	);
 
 	fastify.delete(
 		"/paymentsmethods/:id",
 		{
+			preValidation: fastify.authenticate,
 			schema: {
 				description: "Removes a payment methods.",
 				tags: ["payments methods"],
@@ -89,10 +106,14 @@ export async function paymentsMethodsRoutes(fastify: FastifyInstance, options: F
 				response: {
 					200: paymentMethodMessageResponse,
 					400: ErrorSchema,
+					401: ErrorSchema,
+					404: ErrorSchema,
 					500: ErrorSchema,
 				},
 			},
 		},
-		controller.deletePaymentMethod
+		async (request: FastifyRequest<any>, reply: FastifyReply) => {
+			await controller.deletePaymentMethod(request, reply);
+		}
 	);
 }

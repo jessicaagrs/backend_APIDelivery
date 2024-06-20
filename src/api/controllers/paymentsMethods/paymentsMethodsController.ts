@@ -61,8 +61,8 @@ class PaymentsMethodsController {
 
 	async updatePaymentMethod(request: FastifyRequest<{ Params: Partial<ParamsType> }>, reply: FastifyReply) {
 		try {
-			const { id, description, storeId } = paramsSchema.partial().parse(request.body);
-			await service.updatePaymentMethod(description, id, storeId);
+			const { id, description } = paramsSchema.partial().parse(request.body);
+			await service.updatePaymentMethod(description, id);
 			return reply.status(200).send("Forma de pagamento atualizada com sucesso.");
 		} catch (error: any) {
 			const statusCode = reply.statusCode || 500;

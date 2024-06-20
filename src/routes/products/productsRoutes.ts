@@ -1,4 +1,4 @@
-import { FastifyInstance, FastifyPluginOptions } from "fastify";
+import { FastifyInstance, FastifyPluginOptions, FastifyReply, FastifyRequest } from "fastify";
 import ProductsController from "../../api/controllers/products/productsController";
 import {
 	ProductSchema,
@@ -15,6 +15,7 @@ export async function productsRoutes(fastify: FastifyInstance, options: FastifyP
 	fastify.get(
 		"/products/all/:storeId",
 		{
+			preValidation: fastify.authenticate,
 			schema: {
 				description:
 					"Returns a list of products. If the store has not yet registered, standard products will be generated the first time.",
@@ -31,16 +32,21 @@ export async function productsRoutes(fastify: FastifyInstance, options: FastifyP
 				response: {
 					200: productsListSchema,
 					400: ErrorSchema,
+					401: ErrorSchema,
+					404: ErrorSchema,
 					500: ErrorSchema,
 				},
 			},
 		},
-		controller.getAllProducts
+		async (request: FastifyRequest<any>, reply: FastifyReply) => {
+			await controller.getAllProducts(request, reply);
+		}
 	);
 
 	fastify.get(
 		"/products/:id",
 		{
+			preValidation: fastify.authenticate,
 			schema: {
 				description: "Returns a product via a specific id.",
 				tags: ["products"],
@@ -56,16 +62,21 @@ export async function productsRoutes(fastify: FastifyInstance, options: FastifyP
 				response: {
 					200: ProductSchema,
 					400: ErrorSchema,
+					401: ErrorSchema,
+					404: ErrorSchema,
 					500: ErrorSchema,
 				},
 			},
 		},
-		controller.getProductById
+		async (request: FastifyRequest<any>, reply: FastifyReply) => {
+			await controller.getProductById(request, reply);
+		}
 	);
 
 	fastify.post(
 		"/products",
 		{
+			preValidation: fastify.authenticate,
 			schema: {
 				description: "Add a new product.",
 				tags: ["products"],
@@ -73,16 +84,21 @@ export async function productsRoutes(fastify: FastifyInstance, options: FastifyP
 				response: {
 					201: productMessageResponse,
 					400: ErrorSchema,
+					401: ErrorSchema,
+					404: ErrorSchema,
 					500: ErrorSchema,
 				},
 			},
 		},
-		controller.createProduct
+		async (request: FastifyRequest<any>, reply: FastifyReply) => {
+			await controller.createProduct(request, reply);
+		}
 	);
 
 	fastify.put(
 		"/products",
 		{
+			preValidation: fastify.authenticate,
 			schema: {
 				description: "Updates product data.",
 				tags: ["products"],
@@ -90,16 +106,21 @@ export async function productsRoutes(fastify: FastifyInstance, options: FastifyP
 				response: {
 					200: productMessageResponse,
 					400: ErrorSchema,
+					401: ErrorSchema,
+					404: ErrorSchema,
 					500: ErrorSchema,
 				},
 			},
 		},
-		controller.updateProduct
+		async (request: FastifyRequest<any>, reply: FastifyReply) => {
+			await controller.updateProduct(request, reply);
+		}
 	);
 
 	fastify.delete(
 		"/products/:id",
 		{
+			preValidation: fastify.authenticate,
 			schema: {
 				description: "Removes a product.",
 				tags: ["products"],
@@ -115,10 +136,14 @@ export async function productsRoutes(fastify: FastifyInstance, options: FastifyP
 				response: {
 					200: productMessageResponse,
 					400: ErrorSchema,
+					401: ErrorSchema,
+					404: ErrorSchema,
 					500: ErrorSchema,
 				},
 			},
 		},
-		controller.deleteProduct
+		async (request: FastifyRequest<any>, reply: FastifyReply) => {
+			await controller.deleteProduct(request, reply);
+		}
 	);
 }

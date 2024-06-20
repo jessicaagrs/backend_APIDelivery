@@ -1,3 +1,4 @@
+import { RoleEnum } from "../../../enums/enums";
 import { decryptCustomerPassword, encryptCustomerPassword } from "../../../utils/formatter";
 import OrdersRepository from "../../repositories/orders/ordersRepository";
 import ShopmansRepository from "../../repositories/shopmans/shopmansRepository";
@@ -77,9 +78,11 @@ class ShopmansService {
 
 		if (!storeExist) throw new Error("Loja não encontrada.");
 
-		const roleInStore = await repository.getShopmanByRoleInStore(role, storeId);
+		if (role === RoleEnum.ADMIN) {
+			const roleInStore = await repository.getShopmanByRoleInStore(role, storeId);
 
-		if(roleInStore) throw new Error("Já existe um administrador na loja informada.");
+			if (roleInStore) throw new Error("Já existe um administrador na loja informada.");
+		}
 
 		const passwordEncrypt = encryptCustomerPassword(password);
 
@@ -90,13 +93,10 @@ class ShopmansService {
 		id: string | undefined,
 		name: string | undefined,
 		email: string | undefined,
-		role: string | undefined,
 		password: string | undefined
 	) {
-		if (name === undefined || email === undefined || role === undefined || id === undefined || password === undefined) {
-			throw new Error(
-				"Para atualizar um vendedor, o nome, email, senha, status, o tipo de autorização e o id devem ser informados."
-			);
+		if (name === undefined || email === undefined || id === undefined || password === undefined) {
+			throw new Error("Para atualizar um vendedor, o nome, email, senha, status e o id devem ser informados.");
 		}
 
 		const shopman = await repository.getShopmanById(id);
@@ -115,7 +115,7 @@ class ShopmansService {
 
 		password != passwordDecrypt ? (password = encryptCustomerPassword(password)) : (password = shopman.password);
 
-		await repository.updateShopman(id, name, email, role, password);
+		await repository.updateShopman(id, name, email, password);
 	}
 
 	async deleteShopman(id: string | undefined) {

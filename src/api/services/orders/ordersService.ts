@@ -110,15 +110,10 @@ class OrdersService {
 		await productsOrderService.createProductsOrder(products, newOrder.id);
 	}
 
-	async updateOrderByCustomer(id: string | undefined, paymentMethodId: string | undefined, status: string | undefined) {
+	async updateOrderByCustomer(id: string | undefined, paymentMethodId: string | undefined) {
 		if (id == undefined) throw new Error("O ID do pedido é obrigatório");
 
 		if (paymentMethodId == undefined) throw new Error("O ID da forma de pagamento é obrigatória");
-
-		if (status == undefined) throw new Error("O status do pedido é obrigatório");
-
-		if (status != StatusOrdersEnum.PENDING)
-			throw new Error("Não é possível atualizar pedido com status diferente de Pendente");
 
 		let order = await repository.getOrderById(id);
 		if (order == null) throw new Error("Não existe um pedido com o ID informado");
@@ -126,7 +121,7 @@ class OrdersService {
 		let paymentMethod = await repositoryPaymentMethod.getPaymentMethodById(paymentMethodId);
 		if (paymentMethod == null) throw new Error("Não existe um método de pagamento com o ID informado");
 
-		await repository.updateOrderStatus(id, paymentMethodId, status, order.shopmanId);
+		await repository.updateOrderStatus(id, paymentMethodId, order.status, order.shopmanId);
 	}
 
 	async updateOrderByShopman(id: string | undefined, shopmanId: string | undefined, status: string | undefined) {

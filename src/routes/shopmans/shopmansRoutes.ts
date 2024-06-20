@@ -1,4 +1,4 @@
-import { FastifyInstance, FastifyPluginOptions } from "fastify";
+import { FastifyInstance, FastifyPluginOptions, FastifyReply, FastifyRequest } from "fastify";
 import ShopmansController from "../../api/controllers/shopmans/shopmansController";
 import {
 	ShopmanSchema,
@@ -15,6 +15,7 @@ export async function shopmansRoutes(fastify: FastifyInstance, options: FastifyP
 	fastify.get(
 		"/shopmans/all/:storeId",
 		{
+			preValidation: fastify.authenticate,
 			schema: {
 				description: "Returns a list of shopmans.",
 				params: {
@@ -30,16 +31,21 @@ export async function shopmansRoutes(fastify: FastifyInstance, options: FastifyP
 				response: {
 					200: shopmanListSchema,
 					400: ErrorSchema,
+					401: ErrorSchema,
+					404: ErrorSchema,
 					500: ErrorSchema,
 				},
 			},
 		},
-		controller.getAllShopmans
+		async (request: FastifyRequest<any>, reply: FastifyReply) => {
+			await controller.getAllShopmans(request, reply);
+		}
 	);
 
 	fastify.get(
 		"/shopmans/:email",
 		{
+			preValidation: fastify.authenticate,
 			schema: {
 				description: "Returns a shopman via a specific email.",
 				tags: ["shopmans"],
@@ -55,11 +61,15 @@ export async function shopmansRoutes(fastify: FastifyInstance, options: FastifyP
 				response: {
 					200: ShopmanSchema,
 					400: ErrorSchema,
+					401: ErrorSchema,
+					404: ErrorSchema,
 					500: ErrorSchema,
 				},
 			},
 		},
-		controller.getShopmanByEmail
+		async (request: FastifyRequest<any>, reply: FastifyReply) => {
+			await controller.getShopmanByEmail(request, reply);
+		}
 	);
 
 	fastify.post(
@@ -72,16 +82,21 @@ export async function shopmansRoutes(fastify: FastifyInstance, options: FastifyP
 				response: {
 					201: shopmanMessageResponse,
 					400: ErrorSchema,
+					401: ErrorSchema,
+					404: ErrorSchema,
 					500: ErrorSchema,
 				},
 			},
 		},
-		controller.createShopman
+		async (request: FastifyRequest<any>, reply: FastifyReply) => {
+			await controller.createShopman(request, reply);
+		}
 	);
 
 	fastify.put(
 		"/shopmans",
 		{
+			preValidation: fastify.authenticate,
 			schema: {
 				description: "Updates shopman data.",
 				tags: ["shopmans"],
@@ -89,16 +104,21 @@ export async function shopmansRoutes(fastify: FastifyInstance, options: FastifyP
 				response: {
 					200: shopmanMessageResponse,
 					400: ErrorSchema,
+					401: ErrorSchema,
+					404: ErrorSchema,
 					500: ErrorSchema,
 				},
 			},
 		},
-		controller.updateShopman
+		async (request: FastifyRequest<any>, reply: FastifyReply) => {
+			await controller.updateShopman(request, reply);
+		}
 	);
 
 	fastify.delete(
 		"/shopmans/:id",
 		{
+			preValidation: fastify.authenticate,
 			schema: {
 				description: "Removes a shopman.",
 				tags: ["shopmans"],
@@ -114,10 +134,14 @@ export async function shopmansRoutes(fastify: FastifyInstance, options: FastifyP
 				response: {
 					200: shopmanMessageResponse,
 					400: ErrorSchema,
+					401: ErrorSchema,
+					404: ErrorSchema,
 					500: ErrorSchema,
 				},
 			},
 		},
-		controller.deleteShopman
+		async (request: FastifyRequest<any>, reply: FastifyReply) => {
+			await controller.deleteShopman(request, reply);
+		}
 	);
 }

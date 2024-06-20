@@ -1,4 +1,4 @@
-import { FastifyInstance, FastifyPluginOptions } from "fastify";
+import { FastifyInstance, FastifyPluginOptions, FastifyReply, FastifyRequest } from "fastify";
 import CustomersController from "../../api/controllers/customers/customersController";
 import {
 	CustomerSchema,
@@ -15,22 +15,28 @@ export async function customersRoutes(fastify: FastifyInstance, options: Fastify
 	fastify.get(
 		"/customers",
 		{
+			preValidation: fastify.authenticate,
 			schema: {
 				description: "Returns a list of customers.",
 				tags: ["customers"],
 				response: {
 					200: CustomersListSchema,
 					400: ErrorSchema,
+					401: ErrorSchema,
+					404: ErrorSchema,
 					500: ErrorSchema,
 				},
 			},
 		},
-		controller.getAllCustomers
+		async (request: FastifyRequest<any>, reply: FastifyReply) => {
+			await controller.getAllCustomers(request, reply);
+		}
 	);
 
 	fastify.get(
 		"/customers/:email",
 		{
+			preValidation: fastify.authenticate,
 			schema: {
 				description: "Returns a customer via a specific email.",
 				tags: ["customers"],
@@ -46,11 +52,15 @@ export async function customersRoutes(fastify: FastifyInstance, options: Fastify
 				response: {
 					200: CustomerSchema,
 					400: ErrorSchema,
+					401: ErrorSchema,
+					404: ErrorSchema,
 					500: ErrorSchema,
 				},
 			},
 		},
-		controller.getCustomerByEmail
+		async (request: FastifyRequest<any>, reply: FastifyReply) => {
+			await controller.getCustomerByEmail(request, reply);
+		}
 	);
 
 	fastify.post(
@@ -63,16 +73,20 @@ export async function customersRoutes(fastify: FastifyInstance, options: Fastify
 				response: {
 					201: CustomerMessageResponse,
 					400: ErrorSchema,
+					404: ErrorSchema,
 					500: ErrorSchema,
 				},
 			},
 		},
-		controller.createCustomer
+		async (request: FastifyRequest<any>, reply: FastifyReply) => {
+			await controller.createCustomer(request, reply);
+		}
 	);
 
 	fastify.put(
 		"/customers",
 		{
+			preValidation: fastify.authenticate,
 			schema: {
 				description: "Updates customer data.",
 				tags: ["customers"],
@@ -80,16 +94,21 @@ export async function customersRoutes(fastify: FastifyInstance, options: Fastify
 				response: {
 					200: CustomerMessageResponse,
 					400: ErrorSchema,
+					401: ErrorSchema,
+					404: ErrorSchema,
 					500: ErrorSchema,
 				},
 			},
 		},
-		controller.updateCustomer
+		async (request: FastifyRequest<any>, reply: FastifyReply) => {
+			await controller.updateCustomer(request, reply);
+		}
 	);
 
 	fastify.delete(
 		"/customers/:id",
 		{
+			preValidation: fastify.authenticate,
 			schema: {
 				description: "Removes a customer.",
 				tags: ["customers"],
@@ -105,10 +124,14 @@ export async function customersRoutes(fastify: FastifyInstance, options: Fastify
 				response: {
 					200: CustomerMessageResponse,
 					400: ErrorSchema,
+					401: ErrorSchema,
+					404: ErrorSchema,
 					500: ErrorSchema,
 				},
 			},
 		},
-		controller.deleteCustomer
+		async (request: FastifyRequest<any>, reply: FastifyReply) => {
+			await controller.deleteCustomer(request, reply);
+		}
 	);
 }

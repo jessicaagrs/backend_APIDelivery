@@ -54,14 +54,13 @@ class PaymentsMethodsRepository {
 		});
 	}
 
-	async updatePaymentMethod(id: string, description: string, storeId: string) {
+	async updatePaymentMethod(id: string, description: string) {
 		await prismaClient.paymentsMethods.update({
 			where: {
 				id,
 			},
 			data: {
 				description,
-				storeId
 			},
 		});
 	}

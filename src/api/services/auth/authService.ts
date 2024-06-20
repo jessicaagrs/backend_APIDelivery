@@ -37,7 +37,7 @@ class AuthService {
 			token: "",
 			user: {
 				id: customer.id,
-				email: customer.email,
+				typeLogin: TypeLoginEnum.CUSTOMER,
 				creationDate: new Date().toString(),
 			},
 		};
@@ -62,7 +62,7 @@ class AuthService {
 			token: "",
 			user: {
 				id: shopman.id,
-				email: shopman.email,
+				typeLogin: TypeLoginEnum.SHOPMAN,
 				creationDate: new Date().toString(),
 			},
 		};

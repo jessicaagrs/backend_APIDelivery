@@ -17,6 +17,7 @@ export async function authRoutes(fastify: FastifyInstance, options: FastifyPlugi
 					200: responseLoginSchema,
 					400: ErrorSchema,
 					401: ErrorSchema,
+					404: ErrorSchema,
 					500: ErrorSchema,
 				},
 			},

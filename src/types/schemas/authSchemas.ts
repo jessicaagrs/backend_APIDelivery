@@ -10,7 +10,7 @@ const responseLoginSchema = Type.Object({
 	token: Type.String(),
 	user: Type.Object({
 		id: Type.String(),
-		email: Type.String(),
+		typeLogin: Type.String(),
 		creationDate: Type.String(),
 	}),
 });

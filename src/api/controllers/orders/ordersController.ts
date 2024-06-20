@@ -163,8 +163,8 @@ class OrdersController {
 
 	async updateOrderByCustomer(request: FastifyRequest<{ Params: Partial<ParamsType> }>, reply: FastifyReply) {
 		try {
-			const { id, paymentMethodId, status } = paramsSchema.partial().parse(request.body);
-			await service.updateOrderByCustomer(id, paymentMethodId, status);
+			const { id, paymentMethodId } = paramsSchema.partial().parse(request.body);
+			await service.updateOrderByCustomer(id, paymentMethodId);
 			return reply.status(200).send("Pedido atualizado com sucesso.");
 		} catch (error: any) {
 			const statusCode = reply.statusCode || 500;

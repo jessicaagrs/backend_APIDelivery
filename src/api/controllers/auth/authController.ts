@@ -1,7 +1,7 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 import { ApiError } from "../../../error/apiError";
-import { validateTypeLogin } from "../../../utils/formatter";
+import { validateAcessPassword, validateTypeLogin } from "../../../utils/formatter";
 import AuthService from "../../services/auth/authService";
 
 const service = new AuthService();
@@ -40,9 +40,8 @@ class AuthController {
 		try {
 			const { email, password, typeLogin } = paramsSchema.partial().parse(request.body);
 			const response = await service.Login(email, password, typeLogin);
-			response.token = app.jwt.sign(response.user);
+			response.token = app.jwt.sign(response.user, { expiresIn: "10m" });
 
-			console.log(response);
 			return reply.send(response);
 		} catch (error: any) {
 			const statusCode = reply.statusCode || 500;

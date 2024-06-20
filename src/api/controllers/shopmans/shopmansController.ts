@@ -58,7 +58,7 @@ const paramsSchema = z.object({
 		})
 		.cuid({
 			message: "O id da loja deve ser um CUID",
-		})
+		}),
 });
 type ParamsType = z.infer<typeof paramsSchema>;
 
@@ -101,8 +101,8 @@ class ShopmansController {
 
 	async updateShopman(request: FastifyRequest<{ Params: Partial<ParamsType> }>, reply: FastifyReply) {
 		try {
-			const { id, name, email, role, password } = paramsSchema.partial().parse(request.body);
-			await service.updateShopman(id, name, email, role, password);
+			const { id, name, email, password } = paramsSchema.partial().parse(request.body);
+			await service.updateShopman(id, name, email, password);
 			return reply.status(200).send("Vendedor atualizado com sucesso.");
 		} catch (error: any) {
 			const statusCode = reply.statusCode || 500;
