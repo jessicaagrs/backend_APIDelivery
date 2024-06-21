@@ -57,23 +57,23 @@ Status do Projeto: :heavy_check_mark: <!-- > :heavy_check_mark:--> Concluído <!
 
 * Rotas de cliente:
   
-![N|Solid](https://uploaddeimagens.com.br/images/004/802/120/full/Screenshot_3.png?1718900571)
+![N|Solid](https://uploaddeimagens.com.br/images/004/802/473/full/Screenshot_1.png?1718970591)
 
 * Rotas de lojista:
   
-![N|Solid](https://uploaddeimagens.com.br/images/004/802/121/full/Screenshot_4.png?1718900606)
+![N|Solid](https://uploaddeimagens.com.br/images/004/802/474/original/Screenshot_2.png?1718970616)
 
 * Rotas de forma de pagamento:
   
-![N|Solid](https://uploaddeimagens.com.br/images/004/802/122/full/Screenshot_5.png?1718900629)
+![N|Solid](https://uploaddeimagens.com.br/images/004/802/475/full/Screenshot_3.png?1718970639)
 
 * Rotas de produtos:
   
-![N|Solid](https://uploaddeimagens.com.br/images/004/802/123/full/Screenshot_6.png?1718900684)
+![N|Solid](https://uploaddeimagens.com.br/images/004/802/476/full/Screenshot_4.png?1718970662)
 
 * Rotas de pedidos:
   
-![N|Solid](https://uploaddeimagens.com.br/images/004/802/125/full/Screenshot_7.png?1718900746)
+![N|Solid](https://uploaddeimagens.com.br/images/004/802/477/full/Screenshot_5.png?1718970685)
 
 * Rota de produto nos pedidos:
   
