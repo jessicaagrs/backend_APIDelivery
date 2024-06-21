@@ -11,6 +11,16 @@ class ShopmansRepository {
 		return shopmans;
 	}
 
+	async getShopmansByPagination(take: number, skip: number, storeId: string) {
+		return await prismaClient.shopmans.findMany({
+			where: {
+				storeId,
+			},
+			take,
+			skip,
+		});
+	}
+
 	async getShopmanById(id: string) {
 		const shopman = await prismaClient.shopmans.findUnique({
 			where: {

@@ -30,6 +30,13 @@ const paramsSchema = z.object({
 		.cuid({
 			message: "O id da loja deve ser um CUID",
 		}),
+	take: z
+		.string()
+		.transform(Number)
+		.refine((value) => value > 0, {
+			message: "O número de registros  deve ser maior que 0",
+		}),
+	skip: z.string().transform(Number),
 });
 
 type ParamsType = z.infer<typeof paramsSchema>;
@@ -39,6 +46,18 @@ class PaymentsMethodsController {
 		try {
 			const storeId = paramsSchema.partial().parse(request.params).storeId;
 			const paymentsMethods = await service.getAllPaymentsMethods(storeId);
+			return reply.send(paymentsMethods);
+		} catch (error: any) {
+			const statusCode = reply.statusCode || 500;
+			const err = new ApiError(statusCode, error.message);
+			reply.status(err.statusCode).send(err);
+		}
+	}
+
+	async getPaymentsMethodsByPagination(request: FastifyRequest, reply: FastifyReply) {
+		try {
+			const { take, skip, storeId } = paramsSchema.partial().parse(request.params);
+			const paymentsMethods = await service.getPaymentsMethodsByPagination(take, skip, storeId);
 			return reply.send(paymentsMethods);
 		} catch (error: any) {
 			const statusCode = reply.statusCode || 500;

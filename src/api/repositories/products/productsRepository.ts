@@ -12,6 +12,16 @@ class ProductsRepository {
 		return products;
 	}
 
+	async getProductsByPagination(take: number, skip: number, storeId: string) {
+		return await prismaClient.products.findMany({
+			where: {
+				storeId,
+			},
+			take,
+			skip,
+		});
+	}
+
 	async getProductById(id: string) {
 		const product = await prismaClient.products.findUnique({
 			where: {
@@ -148,7 +158,7 @@ class ProductsRepository {
 				price,
 				type,
 				urlImage,
-				storeId
+				storeId,
 			},
 		});
 	}

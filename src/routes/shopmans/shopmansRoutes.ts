@@ -13,6 +13,43 @@ const controller = new ShopmansController();
 
 export async function shopmansRoutes(fastify: FastifyInstance, options: FastifyPluginOptions) {
 	fastify.get(
+		"/shopmans/paginator/:storeId/:take/:skip",
+		{
+			preValidation: fastify.authenticate,
+			schema: {
+				description:
+					"Returns a list of shopmans by pagination. Enter the number of records and how many items to ignore.",
+				tags: ["shopmans"],
+				params: {
+					type: "object",
+					required: ["storeId", "take", "skip"],
+					properties: {
+						storeId: {
+							type: "string",
+						},
+						take: {
+							type: "string",
+						},
+						skip: {
+							type: "string",
+						}
+					},
+				},
+				response: {
+					200: shopmanListSchema,
+					400: ErrorSchema,
+					401: ErrorSchema,
+					404: ErrorSchema,
+					500: ErrorSchema,
+				},
+			},
+		},
+		async (request: FastifyRequest<any>, reply: FastifyReply) => {
+			await controller.getShopmansByPagination(request, reply);
+		}
+	);
+
+	fastify.get(
 		"/shopmans/all/:storeId",
 		{
 			preValidation: fastify.authenticate,

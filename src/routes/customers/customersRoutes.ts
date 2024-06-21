@@ -13,6 +13,39 @@ const controller = new CustomersController();
 
 export async function customersRoutes(fastify: FastifyInstance, options: FastifyPluginOptions) {
 	fastify.get(
+		"/customers/paginator/:take/:skip",
+		{
+			preValidation: fastify.authenticate,
+			schema: {
+				description:
+					"Returns a list of customers by pagination. Enter the number of records and how many items to ignore.",
+				tags: ["customers"],
+				params: {
+					type: "object",
+					required: ["take", "skip"],
+					properties: {
+						take: {
+							type: "string",
+						},
+						skip: {
+							type: "string",
+						},
+					},
+				},
+				response: {
+					200: CustomersListSchema,
+					400: ErrorSchema,
+					401: ErrorSchema,
+					404: ErrorSchema,
+					500: ErrorSchema,
+				},
+			},
+		},
+		async (request: FastifyRequest<any>, reply: FastifyReply) => {
+			await controller.getCustomersByPagination(request, reply);
+		}
+	);
+	fastify.get(
 		"/customers",
 		{
 			preValidation: fastify.authenticate,

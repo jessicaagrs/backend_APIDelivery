@@ -11,6 +11,16 @@ class PaymentsMethodsRepository {
 		return payments;
 	}
 
+	async getPaymentsMethodsByPagination(take: number, skip: number, storeId: string) {
+		return await prismaClient.paymentsMethods.findMany({
+			where: {
+				storeId,
+			},
+			take,
+			skip,
+		});
+	}
+
 	async getPaymentMethodById(id: string) {
 		const payment = await prismaClient.paymentsMethods.findUnique({
 			where: {
@@ -49,7 +59,7 @@ class PaymentsMethodsRepository {
 		await prismaClient.paymentsMethods.create({
 			data: {
 				description,
-				storeId
+				storeId,
 			},
 		});
 	}

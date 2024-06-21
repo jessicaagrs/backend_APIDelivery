@@ -25,6 +25,17 @@ class OrdersService {
 		return await repository.getAllOrdersByStore(storeId);
 	}
 
+	async getOrdersByPagination(storeId: string | undefined, take: number | undefined, skip: number | undefined) {
+		if (take === undefined || skip === undefined || storeId == undefined) {
+			throw new Error(
+				"Para buscar os pedidos, o número de registros, id da loja e a quantidade de itens a serem ignorados devem ser informados."
+			);
+		}
+
+		const orders = await repository.getOrdersByPagination(storeId, take, skip);
+		return orders;
+	}
+
 	async getAllOrdersByCustomer(storeId: string | undefined, customerId: string | undefined) {
 		if (storeId == undefined) throw new Error("O Id da loja é obrigatório");
 

@@ -9,6 +9,16 @@ class OrdersRepository {
 		});
 	}
 
+	async getOrdersByPagination(storeId: string, take: number, skip: number) {
+		return await prismaClient.orders.findMany({
+			where: {
+				storeId,
+			},
+			take,
+			skip,
+		});
+	}
+
 	async getAllOrdersByCustomer(storeId: string, customerId: string) {
 		return await prismaClient.orders.findMany({
 			where: {

@@ -21,6 +21,17 @@ class ShopmansService {
 		return shopmans;
 	}
 
+	async getShopmansByPagination(take: number | undefined, skip: number | undefined, storeId: string | undefined) {
+		if (take === undefined || skip === undefined || storeId === undefined) {
+			throw new Error(
+				"Para buscar os vendedores, o número de registros, id da loja e a quantidade de itens a serem ignorados devem ser informados."
+			);
+		}
+
+		const shopmans = await repository.getShopmansByPagination(take, skip, storeId);
+		return shopmans;
+	}
+
 	async getShopmanById(id: string) {
 		if (id === "") {
 			throw new Error("O Id do vendedor deve ser informado.");

@@ -14,6 +14,17 @@ class CustomersService {
 		return await repository.getAllCustomers();
 	}
 
+	async getCustomersByPagination(take: number | undefined, skip: number | undefined) {
+		if (take === undefined || skip === undefined) {
+			throw new Error(
+				"Para buscar os clientes, o número de registros e a quantidade de itens a serem ignorados devem ser informados."
+			);
+		}
+
+		const customers = await repository.getCustomersByPagination(take, skip);
+		return customers;
+	}
+
 	async getCustomerByEmail(email: string | undefined) {
 		if (email === undefined) {
 			throw new Error("Para atualizar um cliente, o email deve ser informado.");

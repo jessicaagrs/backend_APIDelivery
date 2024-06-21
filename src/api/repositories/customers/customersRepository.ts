@@ -7,6 +7,13 @@ class CustomersRepository {
 		return customers;
 	}
 
+	async getCustomersByPagination(take: number, skip: number) {
+		return await prismaClient.customers.findMany({
+			take,
+			skip,
+		});
+	}
+
 	async getCustomerByEmail(email: string) {
 		const user = await prismaClient.customers.findUnique({
 			where: {

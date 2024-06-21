@@ -48,6 +48,13 @@ const paramsSchema = z.object({
 		required_error: "O status do cliente é obrigatório",
 		invalid_type_error: "O cargo do vendedor deve ser false ou true",
 	}),
+	take: z
+		.string()
+		.transform(Number)
+		.refine((value) => value > 0, {
+			message: "O número de registros  deve ser maior que 0",
+		}),
+	skip: z.string().transform(Number),
 });
 
 type ParamsType = z.infer<typeof paramsSchema>;
@@ -56,6 +63,18 @@ class CustomersController {
 	async getAllCustomers(request: FastifyRequest, reply: FastifyReply) {
 		try {
 			const customers = await service.getAllCustomers();
+			return reply.send(customers);
+		} catch (error: any) {
+			const statusCode = reply.statusCode || 500;
+			const err = new ApiError(statusCode, error.message);
+			reply.status(err.statusCode).send(err);
+		}
+	}
+
+	async getCustomersByPagination(request: FastifyRequest, reply: FastifyReply) {
+		try {
+			const { take, skip } = paramsSchema.partial().parse(request.params);
+			const customers = await service.getCustomersByPagination(take, skip);
 			return reply.send(customers);
 		} catch (error: any) {
 			const statusCode = reply.statusCode || 500;

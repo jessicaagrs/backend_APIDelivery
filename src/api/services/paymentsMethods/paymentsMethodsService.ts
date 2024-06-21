@@ -15,7 +15,7 @@ class PaymentsMethodsService {
 		const storeExist = await repositoryStore.getStoreById(storeId);
 
 		if (!storeExist) throw new Error("Loja não encontrada.");
-		
+
 		const payments = await repository.getAllPaymentMethods(storeId);
 
 		if (payments.length === 0) {
@@ -23,6 +23,21 @@ class PaymentsMethodsService {
 			return await repository.getAllPaymentMethods(storeId);
 		}
 
+		return payments;
+	}
+
+	async getPaymentsMethodsByPagination(
+		take: number | undefined,
+		skip: number | undefined,
+		storeId: string | undefined
+	) {
+		if (take === undefined || skip === undefined || storeId === undefined) {
+			throw new Error(
+				"Para buscar os métodos de pagamentos, o número de registros, id da loja e a quantidade de itens a serem ignorados devem ser informados."
+			);
+		}
+
+		const payments = await repository.getPaymentsMethodsByPagination(take, skip, storeId);
 		return payments;
 	}
 

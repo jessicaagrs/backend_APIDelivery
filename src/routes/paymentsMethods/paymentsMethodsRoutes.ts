@@ -1,7 +1,6 @@
 import { FastifyInstance, FastifyPluginOptions, FastifyReply, FastifyRequest } from "fastify";
 import PaymentsMethodsController from "../../api/controllers/paymentsMethods/paymentsMethodsController";
 import {
-	PaymentMethodSchema,
 	paymentMethodInsertSchema,
 	paymentMethodListSchema,
 	paymentMethodMessageResponse,
@@ -12,6 +11,42 @@ import { ErrorSchema } from "../../types/schemas/errorSchema";
 const controller = new PaymentsMethodsController();
 
 export async function paymentsMethodsRoutes(fastify: FastifyInstance, options: FastifyPluginOptions) {
+	fastify.get(
+		"/paymentsmethods/paginator/:storeId/:take/:skip",
+		{
+			preValidation: fastify.authenticate,
+			schema: {
+				description:
+					"Returns a list of payments methods by pagination. Enter the number of records and how many items to ignore.",
+				tags: ["payments methods"],
+				params: {
+					type: "object",
+					required: ["storeId", "take", "skip"],
+					properties: {
+						storeId: {
+							type: "string",
+						},
+						take: {
+							type: "string",
+						},
+						skip: {
+							type: "string",
+						},
+					},
+				},
+				response: {
+					200: paymentMethodListSchema,
+					400: ErrorSchema,
+					401: ErrorSchema,
+					404: ErrorSchema,
+					500: ErrorSchema,
+				},
+			},
+		},
+		async (request: FastifyRequest<any>, reply: FastifyReply) => {
+			await controller.getPaymentsMethodsByPagination(request, reply);
+		}
+	);
 	fastify.get(
 		"/paymentsmethods/:storeId",
 		{

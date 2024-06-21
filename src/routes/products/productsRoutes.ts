@@ -13,6 +13,42 @@ const controller = new ProductsController();
 
 export async function productsRoutes(fastify: FastifyInstance, options: FastifyPluginOptions) {
 	fastify.get(
+		"/products/paginator/:storeId/:take/:skip",
+		{
+			preValidation: fastify.authenticate,
+			schema: {
+				description:
+					"Returns a list of products by pagination. Enter the number of records and how many items to ignore.",
+				tags: ["products"],
+				params: {
+					type: "object",
+					required: ["storeId", "take", "skip"],
+					properties: {
+						storeId: {
+							type: "string",
+						},
+						take: {
+							type: "string",
+						},
+						skip: {
+							type: "string",
+						}
+					},
+				},
+				response: {
+					200: productsListSchema,
+					400: ErrorSchema,
+					401: ErrorSchema,
+					404: ErrorSchema,
+					500: ErrorSchema,
+				},
+			},
+		},
+		async (request: FastifyRequest<any>, reply: FastifyReply) => {
+			await controller.getProductsByPagination(request, reply);
+		}
+	);
+	fastify.get(
 		"/products/all/:storeId",
 		{
 			preValidation: fastify.authenticate,

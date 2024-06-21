@@ -24,6 +24,17 @@ class ProductsService {
 		return products;
 	}
 
+	async getProductsByPagination(take: number | undefined, skip: number | undefined, storeId: string | undefined) {
+		if (take === undefined || skip === undefined || storeId === undefined) {
+			throw new Error(
+				"Para buscar os produtos, o número de registros, id da loja e a quantidade de itens a serem ignorados devem ser informados."
+			);
+		}
+
+		const products = await repository.getProductsByPagination(take, skip, storeId);
+		return products;
+	}
+
 	async getProductById(id: string | undefined) {
 		if (id === undefined) throw new Error("ID do produto não informado.");
 

@@ -59,6 +59,13 @@ const paramsSchema = z.object({
 		.cuid({
 			message: "O id da loja deve ser um CUID",
 		}),
+	take: z
+		.string()
+		.transform(Number)
+		.refine((value) => value > 0, {
+			message: "O número de registros  deve ser maior que 0",
+		}),
+	skip: z.string().transform(Number),
 });
 type ParamsType = z.infer<typeof paramsSchema>;
 
@@ -67,6 +74,18 @@ class ShopmansController {
 		try {
 			const storeId = paramsSchema.partial().parse(request.params).storeId;
 			const shopmans = await service.getAllShopmans(storeId);
+			return reply.send(shopmans);
+		} catch (error: any) {
+			const statusCode = reply.statusCode || 500;
+			const err = new ApiError(statusCode, error.message);
+			reply.status(err.statusCode).send(err);
+		}
+	}
+
+	async getShopmansByPagination(request: FastifyRequest, reply: FastifyReply) {
+		try {
+			const { take, skip, storeId } = paramsSchema.partial().parse(request.params);
+			const shopmans = await service.getShopmansByPagination(take, skip, storeId);
 			return reply.send(shopmans);
 		} catch (error: any) {
 			const statusCode = reply.statusCode || 500;

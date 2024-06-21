@@ -14,6 +14,42 @@ const controller = new OrdersController();
 
 export async function ordersRoutes(fastify: FastifyInstance, options: FastifyPluginOptions) {
 	fastify.get(
+		"/orders/paginator/:storeId/:take/:skip",
+		{
+			preValidation: fastify.authenticate,
+			schema: {
+				description:
+					"Returns a list of orders by pagination. Enter the number of records and how many items to ignore.",
+				tags: ["orders"],
+				params: {
+					type: "object",
+					required: ["storeId", "take", "skip"],
+					properties: {
+						storeId: {
+							type: "string",
+						},
+						take: {
+							type: "string",
+						},
+						skip: {
+							type: "string",
+						},
+					},
+				},
+				response: {
+					200: OrdersListSchema,
+					400: ErrorSchema,
+					401: ErrorSchema,
+					404: ErrorSchema,
+					500: ErrorSchema,
+				},
+			},
+		},
+		async (request: FastifyRequest<any>, reply: FastifyReply) => {
+			await controller.getOrdersByPagination(request, reply);
+		}
+	);
+	fastify.get(
 		"/orders/byStore/all/:storeId",
 		{
 			preValidation: fastify.authenticate,
