@@ -23,7 +23,7 @@ Status do Projeto: :heavy_check_mark: <!-- > :heavy_check_mark:--> Concluído <!
 
 :small_blue_diamond: [Como rodar a aplicação](#como-rodar-a-aplicação-arrow_forward)
 
-:small_blue_diamond: [Licença](#licença)
+:small_blue_diamond: [Licença](#licença-bookmark)
 
 
 
@@ -38,12 +38,12 @@ Status do Projeto: :heavy_check_mark: <!-- > :heavy_check_mark:--> Concluído <!
 <h5>Versão 1.1.0</h5>
 
 <p>:heavy_check_mark: Autenticação via token JWT;</p>
-<p>:heavy_check_mark: Criação, autualização, remoção de clientes;</p>
-<p>:heavy_check_mark: Criação, autualização, remoção de lojistas;</p>
-<p>:heavy_check_mark: Criação, autualização, remoção de lojas;</p>
-<p>:heavy_check_mark: Criação, autualização, remoção de formas de pagamento;</p>
-<p>:heavy_check_mark: Criação, autualização, remoção de produtos;</p>
-<p>:heavy_check_mark: Criação, autualização, remoção de pedidos;</p>
+<p>:heavy_check_mark: Criação, atualização, remoção de clientes;</p>
+<p>:heavy_check_mark: Criação, atualização, remoção de lojistas;</p>
+<p>:heavy_check_mark: Criação, atualização, remoção de lojas;</p>
+<p>:heavy_check_mark: Criação, atualização, remoção de formas de pagamento;</p>
+<p>:heavy_check_mark: Criação, atualização, remoção de produtos;</p>
+<p>:heavy_check_mark: Criação, atualização, remoção de pedidos;</p>
 
 ## Layout :dash:
 
