@@ -15,7 +15,6 @@ export async function storesRoutes(fastify: FastifyInstance, options: FastifyPlu
 	fastify.get(
 		"/stores",
 		{
-			preValidation: fastify.authenticate,
 			schema: {
 				description: "Returns a list of stores.",
 				tags: ["stores"],
