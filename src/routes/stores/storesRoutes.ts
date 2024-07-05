@@ -63,7 +63,6 @@ export async function storesRoutes(fastify: FastifyInstance, options: FastifyPlu
 	fastify.post(
 		"/stores",
 		{
-			preValidation: fastify.authenticate,
 			schema: {
 				description: "Add a new store.",
 				tags: ["stores"],
