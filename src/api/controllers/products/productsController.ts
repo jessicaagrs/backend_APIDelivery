@@ -62,6 +62,14 @@ const paramsSchema = z.object({
 			message: "O número de registros  deve ser maior que 0",
 		}),
 	skip: z.string().transform(Number),
+	filter: z
+		.string({
+			required_error: "O filtro é obrigatório",
+			invalid_type_error: "O filtro deve ser uma string",
+		})
+		.min(1, {	
+			message: "O filtro deve ter pelo menos 1 caracter",
+		}),
 });
 
 type ParamsType = z.infer<typeof paramsSchema>;
@@ -83,6 +91,18 @@ class ProductsController {
 		try {
 			const { take, skip, storeId } = paramsSchema.partial().parse(request.params);
 			const products = await service.getProductsByPagination(take, skip, storeId);
+			return reply.send(products);
+		} catch (error: any) {
+			const statusCode = reply.statusCode || 500;
+			const err = new ApiError(statusCode, error.message);
+			reply.status(err.statusCode).send(err);
+		}
+	}
+
+	async getProductsByFilter(request: FastifyRequest, reply: FastifyReply) {
+		try {
+			const { take, skip, storeId, filter } = paramsSchema.partial().parse(request.params);
+			const products = await service.getProductsByPagination(take, skip, storeId, filter);
 			return reply.send(products);
 		} catch (error: any) {
 			const statusCode = reply.statusCode || 500;

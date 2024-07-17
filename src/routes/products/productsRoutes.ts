@@ -49,6 +49,45 @@ export async function productsRoutes(fastify: FastifyInstance, options: FastifyP
 		}
 	);
 	fastify.get(
+		"/products/paginator/filter/:storeId/:filter/:take/:skip",
+		{
+			preValidation: fastify.authenticate,
+			schema: {
+				description:
+					"Returns a list of products with the specified filter, by pagination.",
+				tags: ["products"],
+				params: {
+					type: "object",
+					required: ["storeId", "filter", "take", "skip"],
+					properties: {
+						storeId: {
+							type: "string",
+						},
+						filter: {
+							type: "string",
+						},
+						take: {
+							type: "string",
+						},
+						skip: {
+							type: "string",
+						}
+					},
+				},
+				response: {
+					200: productsListSchema,
+					400: ErrorSchema,
+					401: ErrorSchema,
+					404: ErrorSchema,
+					500: ErrorSchema,
+				},
+			},
+		},
+		async (request: FastifyRequest<any>, reply: FastifyReply) => {
+			await controller.getProductsByFilter(request, reply);
+		}
+	);
+	fastify.get(
 		"/products/all/:storeId",
 		{
 			preValidation: fastify.authenticate,
