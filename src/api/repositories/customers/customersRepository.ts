@@ -61,6 +61,18 @@ class CustomersRepository {
 		});
 	}
 
+	async updatePasswordCustomer(id: string, password: string) {
+		await prismaClient.customers.update({
+			where: {
+				id,
+			},
+			data: {
+				password,
+				updateAt: new Date(),
+			},
+		});
+	}
+
 	async disableCustomer(id: string, status: boolean) {
 		await prismaClient.customers.update({
 			where: {
