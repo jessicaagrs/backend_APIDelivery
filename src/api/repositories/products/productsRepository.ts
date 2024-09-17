@@ -12,8 +12,22 @@ class ProductsRepository {
         return products;
     }
 
-    async getProductsByPagination(take: number, skip: number, storeId: string, filter?: string) {
-        return await prismaClient.products.findMany({
+    async getProductsByPagination(take: number, page: number, storeId: string, filter?: string) {
+        const totalProducts = await prismaClient.products.count({
+            where: {
+                storeId,
+                OR: filter
+                    ? [
+                          { type: { contains: filter, mode: "insensitive" } },
+                          { description: { contains: filter, mode: "insensitive" } },
+                      ]
+                    : undefined,
+            },
+        });
+
+        const skip = (page - 1) * take;
+
+        const products = await prismaClient.products.findMany({
             where: {
                 storeId,
                 OR: filter
@@ -26,6 +40,11 @@ class ProductsRepository {
             take,
             skip,
         });
+
+        return {
+            totalPages: Math.ceil(totalProducts / take),
+            products,
+        };
     }
 
     async getProductById(id: string) {

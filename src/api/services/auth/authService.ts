@@ -103,8 +103,6 @@ class AuthService {
             await shopmanRepository.updatePasswordShopman(shopman.id, encryptCustomerPassword(passwordReset));
         }
 
-        console.log(`\x1b[42m aqui \x1b[0m`, passwordReset);
-
         return passwordReset;
     }
 }

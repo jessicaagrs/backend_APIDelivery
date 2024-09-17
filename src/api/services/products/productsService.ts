@@ -26,17 +26,17 @@ class ProductsService {
 
     async getProductsByPagination(
         take: number | undefined,
-        skip: number | undefined,
+        page: number | undefined,
         storeId: string | undefined,
         filter?: string
     ) {
-        if (take === undefined || skip === undefined || storeId === undefined) {
+        if (take === undefined || page === undefined || storeId === undefined) {
             throw new Error(
-                "Para buscar os produtos, o número de registros, id da loja e a quantidade de itens a serem ignorados devem ser informados."
+                "Para buscar os produtos, o número de registros, id da loja e a página devem ser informados."
             );
         }
 
-        const products = await repository.getProductsByPagination(take, skip, storeId, filter);
+        const products = await repository.getProductsByPagination(take, page, storeId, filter);
         return products;
     }
 
