@@ -137,3 +137,5 @@ testsOrders.http
 .vscode/extensions.json
 notes.md
 .vercel
+
+.vscode/launch.json
