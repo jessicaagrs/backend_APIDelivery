@@ -11,14 +11,27 @@ class ShopmansRepository {
         return shopmans;
     }
 
-    async getShopmansByPagination(take: number, skip: number, storeId: string) {
-        return await prismaClient.shopmans.findMany({
+    async getShopmansByPagination(take: number, page: number, storeId: string) {
+        const totalShopmans = await prismaClient.shopmans.count({
+            where: {
+                storeId,
+            },
+        });
+
+        const skip = (page - 1) * take;
+
+        const shopmans = await prismaClient.shopmans.findMany({
             where: {
                 storeId,
             },
             take,
             skip,
         });
+
+        return {
+            totalPages: Math.ceil(totalShopmans / take),
+            shopmans,
+        };
     }
 
     async getShopmanById(id: string) {

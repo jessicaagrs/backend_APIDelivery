@@ -65,7 +65,7 @@ const paramsSchema = z.object({
 		.refine((value) => value > 0, {
 			message: "O número de registros  deve ser maior que 0",
 		}),
-	skip: z.string().transform(Number),
+	page: z.string().transform(Number),
 });
 type ParamsType = z.infer<typeof paramsSchema>;
 
@@ -84,8 +84,8 @@ class ShopmansController {
 
 	async getShopmansByPagination(request: FastifyRequest, reply: FastifyReply) {
 		try {
-			const { take, skip, storeId } = paramsSchema.partial().parse(request.params);
-			const shopmans = await service.getShopmansByPagination(take, skip, storeId);
+			const { take, page, storeId } = paramsSchema.partial().parse(request.params);
+			const shopmans = await service.getShopmansByPagination(take, page, storeId);
 			return reply.send(shopmans);
 		} catch (error: any) {
 			const statusCode = reply.statusCode || 500;
