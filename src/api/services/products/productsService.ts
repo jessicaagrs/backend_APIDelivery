@@ -16,11 +16,6 @@ class ProductsService {
 
         const products = await repository.getAllProducts(storeId);
 
-        if (products.length === 0) {
-            await repository.createProductsDefault(storeId);
-            return await repository.getAllProducts(storeId);
-        }
-
         return products;
     }
 
