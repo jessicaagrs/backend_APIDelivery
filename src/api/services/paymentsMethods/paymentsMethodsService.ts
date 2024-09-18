@@ -28,16 +28,16 @@ class PaymentsMethodsService {
 
 	async getPaymentsMethodsByPagination(
 		take: number | undefined,
-		skip: number | undefined,
+		page: number | undefined,
 		storeId: string | undefined
 	) {
-		if (take === undefined || skip === undefined || storeId === undefined) {
+		if (take === undefined || page === undefined || storeId === undefined) {
 			throw new Error(
-				"Para buscar os métodos de pagamentos, o número de registros, id da loja e a quantidade de itens a serem ignorados devem ser informados."
+				"Para buscar os métodos de pagamentos, o número de registros, id da loja e a página devem ser informados."
 			);
 		}
 
-		const payments = await repository.getPaymentsMethodsByPagination(take, skip, storeId);
+		const payments = await repository.getPaymentsMethodsByPagination(take, page, storeId);
 		return payments;
 	}
 
