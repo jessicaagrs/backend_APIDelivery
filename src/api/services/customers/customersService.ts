@@ -10,99 +10,99 @@ type insertCustomer = Omit<CustomerModel, "id" | "createdAt" | "updateAt" | "sta
 type updateCustomer = Omit<CustomerModel, "createdAt" | "updateAt" | "status">;
 
 class CustomersService {
-	async getAllCustomers() {
-		return await repository.getAllCustomers();
-	}
+    async getAllCustomers() {
+        return await repository.getAllCustomers();
+    }
 
-	async getCustomersByPagination(take: number | undefined, skip: number | undefined) {
-		if (take === undefined || skip === undefined) {
-			throw new Error(
-				"Para buscar os clientes, o número de registros e a quantidade de itens a serem ignorados devem ser informados."
-			);
-		}
+    async getCustomersByPagination(take: number | undefined, page: number | undefined) {
+        if (take === undefined || page === undefined) {
+            throw new Error("Para buscar os clientes, o número de registros e a página devem ser informados.");
+        }
 
-		const customers = await repository.getCustomersByPagination(take, skip);
-		return customers;
-	}
+        const customers = await repository.getCustomersByPagination(take, page);
+        return customers;
+    }
 
-	async getCustomerByEmail(email: string | undefined) {
-		if (email === undefined) {
-			throw new Error("Para atualizar um cliente, o email deve ser informado.");
-		}
+    async getCustomerByEmail(email: string | undefined) {
+        if (email === undefined) {
+            throw new Error("Para atualizar um cliente, o email deve ser informado.");
+        }
 
-		const customer = await repository.getCustomerByEmail(email);
+        const customer = await repository.getCustomerByEmail(email);
 
-		if (!customer) {
-			throw new Error("Cliente não encontrado.");
-		}
+        if (!customer) {
+            throw new Error("Cliente não encontrado.");
+        }
 
-		return customer;
-	}
+        return customer;
+    }
 
-	async createCustomer({ name, email, password, phone }: insertCustomer) {
-		if (name === undefined || email === undefined || password === undefined || phone === undefined) {
-			throw new Error("Para criar um cliente, o nome, senha, id da loja, telefone e o email devem ser informados.");
-		}
+    async createCustomer({ name, email, password, phone }: insertCustomer) {
+        if (name === undefined || email === undefined || password === undefined || phone === undefined) {
+            throw new Error(
+                "Para criar um cliente, o nome, senha, id da loja, telefone e o email devem ser informados."
+            );
+        }
 
-		const customer = await repository.getCustomerByEmail(email);
+        const customer = await repository.getCustomerByEmail(email);
 
-		if (customer) {
-			throw new Error("Já existe um cliente com este email.");
-		}
+        if (customer) {
+            throw new Error("Já existe um cliente com este email.");
+        }
 
-		const passwordEncrypt = encryptCustomerPassword(password);
+        const passwordEncrypt = encryptCustomerPassword(password);
 
-		await repository.createCustomer(name, email, passwordEncrypt, phone);
-	}
+        await repository.createCustomer(name, email, passwordEncrypt, phone);
+    }
 
-	async updateCustomer({ id, name, email, password, phone }: updateCustomer) {
-		if (name === "" || !name || email === "" || !email || !password || !phone) {
-			throw new Error("Para atualizar um cliente, nome, senha, telefone e email devem ser informados.");
-		}
+    async updateCustomer({ id, name, email, password, phone }: updateCustomer) {
+        if (name === "" || !name || email === "" || !email || !password || !phone) {
+            throw new Error("Para atualizar um cliente, nome, senha, telefone e email devem ser informados.");
+        }
 
-		if (!id || id === "") {
-			throw new Error("Id do cliente não informado.");
-		}
+        if (!id || id === "") {
+            throw new Error("Id do cliente não informado.");
+        }
 
-		const customer = await repository.getCustomerById(id);
+        const customer = await repository.getCustomerById(id);
 
-		if (!customer) {
-			throw new Error("Cliente não encontrado.");
-		}
+        if (!customer) {
+            throw new Error("Cliente não encontrado.");
+        }
 
-		const emailJaExiste = await repository.getCustomerByEmail(email);
+        const emailJaExiste = await repository.getCustomerByEmail(email);
 
-		if (emailJaExiste && emailJaExiste.id !== id) {
-			throw new Error("Já existe um cliente com este email.");
-		}
+        if (emailJaExiste && emailJaExiste.id !== id) {
+            throw new Error("Já existe um cliente com este email.");
+        }
 
-		const passwordDecrypt = decryptCustomerPassword(customer.password);
+        const passwordDecrypt = decryptCustomerPassword(customer.password);
 
-		password != passwordDecrypt ? (password = encryptCustomerPassword(password)) : (password = customer.password);
+        password != passwordDecrypt ? (password = encryptCustomerPassword(password)) : (password = customer.password);
 
-		await repository.updateCustomer(id, name, email, password, phone);
-	}
+        await repository.updateCustomer(id, name, email, password, phone);
+    }
 
-	async deleteCustomer(id: string | undefined) {
-		if (id === undefined) {
-			throw new Error("ID do cliente não informado.");
-		}
+    async deleteCustomer(id: string | undefined) {
+        if (id === undefined) {
+            throw new Error("ID do cliente não informado.");
+        }
 
-		const customer = await repository.getCustomerById(id);
+        const customer = await repository.getCustomerById(id);
 
-		if (!customer) {
-			throw new Error("Cliente não encontrado.");
-		}
+        if (!customer) {
+            throw new Error("Cliente não encontrado.");
+        }
 
-		const customerInOrder = await repositoryOrders.getOrderByCustomer(customer.id);
+        const customerInOrder = await repositoryOrders.getOrderByCustomer(customer.id);
 
-		if (customerInOrder) {
-			await repository.disableCustomer(id, false);
-			return;
-		}
+        if (customerInOrder) {
+            await repository.disableCustomer(id, false);
+            return;
+        }
 
-		await repository.deleteCustomer(id);
-	}
+        await repository.deleteCustomer(id);
+    }
 }
 
 export default CustomersService;
