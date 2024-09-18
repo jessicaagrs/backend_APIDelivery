@@ -18,7 +18,7 @@ export async function customersRoutes(fastify: FastifyInstance, options: Fastify
 			preValidation: fastify.authenticate,
 			schema: {
 				description:
-					"Returns a list of customers by pagination. Enter the number of records and how many items to ignore.",
+					"Returns a list of customers by pagination. Enter the number of pages.",
 				tags: ["customers"],
 				params: {
 					type: "object",

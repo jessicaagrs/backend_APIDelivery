@@ -19,7 +19,7 @@ export async function productsRoutes(fastify: FastifyInstance, options: FastifyP
             preValidation: fastify.authenticate,
             schema: {
                 description:
-                    "Returns a list of products by pagination. Enter the number of records and how many items to ignore.",
+                    "Returns a list of products by pagination. Enter the number of records and pages.",
                 tags: ["products"],
                 params: {
                     type: "object",
