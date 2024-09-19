@@ -13,4 +13,9 @@ const DataAnalyticsOrdersByStatusSchema = Type.Object({
     status: Type.Array(Type.String()),
 });
 
-export { DataAnalyticsOrdersByMonthSchema, DataAnalyticsOrdersByStatusSchema };
+const DataAnalyticsNewCustomersSchema = Type.Object({
+    months: Type.Array(Type.String()),
+    newCustomers: Type.Array(Type.Number()),
+});
+
+export { DataAnalyticsOrdersByMonthSchema, DataAnalyticsOrdersByStatusSchema, DataAnalyticsNewCustomersSchema };

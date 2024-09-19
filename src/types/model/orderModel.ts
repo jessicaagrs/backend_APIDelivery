@@ -4,3 +4,8 @@ export interface OrderAnalytics {
     totalOrders: number[];
     status?: string[];
 }
+
+export interface CustomersAnalytics {
+    months: string[];
+    newCustomers: number[];
+}

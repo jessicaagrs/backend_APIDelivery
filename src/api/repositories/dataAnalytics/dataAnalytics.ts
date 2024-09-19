@@ -1,5 +1,5 @@
 import prismaClient from "../../../db/prisma";
-import { OrderAnalytics } from "../../../types/model/orderModel";
+import { CustomersAnalytics, OrderAnalytics } from "../../../types/model/orderModel";
 
 class DataAnalyticsRepository {
     async getOrdersSummaryByPeriod(storeId: string, startDate: Date, endDate: Date) {
@@ -10,7 +10,7 @@ class DataAnalyticsRepository {
                   COUNT(*) AS "totalOrders"
                 FROM "Orders"
                 WHERE "storeId" = ${storeId} 
-                AND "createdAt" BETWEEN ${startDate}::timestamp AND ${endDate}::timestamp
+                  AND "createdAt" BETWEEN ${startDate}::timestamp AND ${endDate}::timestamp
                 GROUP BY TO_CHAR("createdAt", 'MM/YYYY')
                 ORDER BY TO_CHAR("createdAt", 'MM/YYYY');
               `;
@@ -31,7 +31,7 @@ class DataAnalyticsRepository {
                   COUNT(*) AS "totalOrders"
                 FROM "Orders"
                 WHERE "storeId" = ${storeId} 
-                AND "createdAt" BETWEEN ${startDate}::timestamp AND ${endDate}::timestamp
+                  AND "createdAt" BETWEEN ${startDate}::timestamp AND ${endDate}::timestamp
                 GROUP BY TO_CHAR("createdAt", 'MM/YYYY'), "status"
                 ORDER BY TO_CHAR("createdAt", 'MM/YYYY');
               `;
@@ -45,7 +45,22 @@ class DataAnalyticsRepository {
     }
 
     async getNewCustomersInStore(storeId: string, startDate: Date, endDate: Date) {
-      
+        const customers: CustomersAnalytics[] = await prismaClient.$queryRaw`
+                    SELECT 
+                          TO_CHAR(c."createdAt", 'MM/YYYY') AS "months",
+                          COUNT(DISTINCT c."id") AS "newCustomers"
+                    FROM "Customers" c
+                        INNER JOIN "Orders" o ON o."customerId" = c."id"
+                    WHERE c."createdAt" BETWEEN ${startDate}::timestamp AND ${endDate}::timestamp
+                        AND o."storeId" = ${storeId} 
+                    GROUP BY TO_CHAR(c."createdAt", 'MM/YYYY')
+                    ORDER BY TO_CHAR(c."createdAt", 'MM/YYYY');
+                  `;
+
+        return {
+            months: customers.map(row => row.months),
+            newCustomers: customers.map(row => row.newCustomers),
+        };
     }
 }
 

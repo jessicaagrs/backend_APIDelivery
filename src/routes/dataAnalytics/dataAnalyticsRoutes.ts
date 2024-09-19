@@ -1,7 +1,7 @@
 import { FastifyInstance, FastifyPluginOptions, FastifyReply, FastifyRequest } from "fastify";
 import DataAnalyticsController from "../../api/controllers/dataAnalytics/dataAnalytics";
 import { ErrorSchema } from "../../types/schemas/errorSchema";
-import { DataAnalyticsOrdersByMonthSchema, DataAnalyticsOrdersByStatusSchema } from "../../types/schemas/dataAnalyticsSchema";
+import { DataAnalyticsNewCustomersSchema, DataAnalyticsOrdersByMonthSchema, DataAnalyticsOrdersByStatusSchema } from "../../types/schemas/dataAnalyticsSchema";
 
 const controller = new DataAnalyticsController();
 
@@ -41,7 +41,7 @@ export default async function dataAnalyticsRoutes(fastify: FastifyInstance, opti
     );
 
     fastify.get(
-        "/dataAnalytics/totalOrdersByStatus/:storeId",
+        "/dataAnalytics/totalOrdersByStatusByMonth/:storeId",
         {
             preValidation: fastify.authenticate,
             schema: {
@@ -71,6 +71,40 @@ export default async function dataAnalyticsRoutes(fastify: FastifyInstance, opti
         },
         async (request: FastifyRequest<any>, reply: FastifyReply) => {
             await controller.getOrdersByStatusByPeriod(request, reply);
+        }
+    );
+
+    fastify.get(
+        "/dataAnalytics/totalNewCustomersByMonth/:storeId",
+        {
+            preValidation: fastify.authenticate,
+            schema: {
+                description: "Returns the total of new customers within a period.",
+                tags: ["dataAnalytics"],
+                params: {
+                    type: "object",
+                    properties: {
+                        storeId: { type: "string" },
+                    },
+                },
+                querystring: {
+                    type: "object",
+                    properties: {
+                        startDate: { type: "string" },
+                        endDate: { type: "string" },
+                    },
+                },
+                response: {
+                    200: DataAnalyticsNewCustomersSchema,
+                    400: ErrorSchema,
+                    401: ErrorSchema,
+                    404: ErrorSchema,
+                    500: ErrorSchema,
+                },
+            },
+        },
+        async (request: FastifyRequest<any>, reply: FastifyReply) => {
+            await controller.getNewCustomersInStore(request, reply);
         }
     );
 }

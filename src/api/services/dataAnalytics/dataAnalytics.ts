@@ -31,6 +31,19 @@ class DataAnalyticsService {
 
         return orders;
     }
+
+    async getNewCustomersInStore(storeId: string, startDate: Date, endDate: Date) {
+        const customers = await dataAnalyticsRepository.getNewCustomersInStore(storeId, startDate, endDate);
+
+        if (!customers) {
+            return {
+                months: [],
+                newCustomers: [],
+            };
+        }
+
+        return customers;
+    }
 }
 
 export default DataAnalyticsService;
