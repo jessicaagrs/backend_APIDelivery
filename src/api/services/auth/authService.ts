@@ -1,9 +1,9 @@
 import { TypeLoginEnum } from "../../../enums/enums";
 import { LoginSchema } from "../../../types/model/authModel";
 import {
-	decryptCustomerPassword,
-	encryptCustomerPassword,
-	generateRandomPasswordReset,
+    decryptCustomerPassword,
+    encryptCustomerPassword,
+    generateRandomPasswordReset,
 } from "../../../utils/formatter";
 import CustomersRepository from "../../repositories/customers/customersRepository";
 import ShopmansRepository from "../../repositories/shopmans/shopmansRepository";
@@ -29,6 +29,10 @@ class AuthService {
 
         if (!customer) {
             throw new Error("Cliente não encontrado.");
+        }
+
+        if (!customer.status) {
+            throw new Error("Cliente inativo. Por favor, entre em contato com o suporte.");
         }
 
         return customer;
@@ -60,6 +64,10 @@ class AuthService {
 
         if (!shopman) {
             throw new Error("Vendedor não encontrado.");
+        }
+
+        if (!shopman.status) {
+            throw new Error("Vendedor inativo. Por favor, entre em contato com o suporte.");
         }
 
         return shopman;
