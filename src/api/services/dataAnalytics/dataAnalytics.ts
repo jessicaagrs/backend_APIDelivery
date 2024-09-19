@@ -3,19 +3,27 @@ import DataAnalyticsRepository from "../../repositories/dataAnalytics/dataAnalyt
 const dataAnalyticsRepository = new DataAnalyticsRepository();
 
 class DataAnalyticsService {
-    async getTotalOrdersFromPeriod(
-        storeId: string | undefined,
-        startDate: Date | undefined,
-        endDate: Date | undefined
-    ) {
-        if (!storeId || !startDate || !endDate) {
-            throw new Error("O id da loja, a data inicial e final são necessários para a pesquisa");
-        }
-        const orders = await dataAnalyticsRepository.getTotalOrdersFromPeriod(storeId, startDate, endDate);
+    async getOrdersSummaryByPeriod(storeId: string, startDate: Date, endDate: Date) {
+        const orders = await dataAnalyticsRepository.getOrdersSummaryByPeriod(storeId, startDate, endDate);
 
         if (!orders) {
             return {
                 months: [],
+                totalValues: [],
+                totalOrders: [],
+            };
+        }
+
+        return orders;
+    }
+
+    async getOrdersByStatusByPeriod(storeId: string, startDate: Date, endDate: Date) {
+        const orders = await dataAnalyticsRepository.getOrdersByStatusByPeriod(storeId, startDate, endDate);
+
+        if (!orders) {
+            return {
+                months: [],
+                status: [],
                 totalValues: [],
                 totalOrders: [],
             };

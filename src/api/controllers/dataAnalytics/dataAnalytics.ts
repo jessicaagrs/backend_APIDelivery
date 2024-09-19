@@ -40,25 +40,50 @@ const paramsSchema = z
 type ParamsType = z.infer<typeof paramsSchema>;
 
 class DataAnalyticsController {
-    async getTotalOrdersFromPeriod(
+    #validateQueryParams(request: FastifyRequest<{ Params: Partial<ParamsType>; Querystring: Partial<ParamsType> }>) {
+        const queryParams = {
+            storeId: request.params.storeId as string,
+            startDate: request.query.startDate as Date,
+            endDate: request.query.endDate as Date,
+        };
+
+        const validation = paramsSchema.safeParse(queryParams);
+
+        if (!validation.success) {
+            throw new Error(validation.error.errors[0].message);
+        }
+
+        return queryParams;
+    }
+
+    async getOrdersSummaryByPeriod(
         request: FastifyRequest<{ Params: Partial<ParamsType>; Querystring: Partial<ParamsType> }>,
         reply: FastifyReply
     ) {
-        const queryParams = {
-            storeId: request.params.storeId,
-            startDate: request.query.startDate,
-            endDate: request.query.endDate,
-        };
-
         try {
+            const queryParams = this.#validateQueryParams(request);
 
-            const validation = paramsSchema.safeParse(queryParams);
+            const result = await service.getOrdersSummaryByPeriod(
+                queryParams.storeId,
+                queryParams.startDate,
+                queryParams.endDate
+            );
+            reply.send(result);
+        } catch (error: any) {
+            const statusCode = reply.statusCode || 500;
+            const err = new ApiError(statusCode, error.message);
+            reply.status(err.statusCode).send(err);
+        }
+    }
 
-            if(!validation.success){
-                throw new Error(validation.error.errors[0].message);
-            }
+    async getOrdersByStatusByPeriod(
+        request: FastifyRequest<{ Params: Partial<ParamsType>; Querystring: Partial<ParamsType> }>,
+        reply: FastifyReply
+    ) {
+        try {
+            const queryParams = this.#validateQueryParams(request);
 
-            const result = await service.getTotalOrdersFromPeriod(
+            const result = await service.getOrdersByStatusByPeriod(
                 queryParams.storeId,
                 queryParams.startDate,
                 queryParams.endDate
