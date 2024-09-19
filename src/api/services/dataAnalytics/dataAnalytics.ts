@@ -44,6 +44,21 @@ class DataAnalyticsService {
 
         return customers;
     }
+
+    async getShopmansByOrders(storeId: string, startDate: Date, endDate: Date) {
+        const shopmans = await dataAnalyticsRepository.getShopmansByOrders(storeId, startDate, endDate);
+
+        if (!shopmans) {
+            return {
+                months: [],
+                totalValues: [],
+                totalOrders: [],
+                shopmans: [],
+            };
+        }
+
+        return shopmans;
+    }
 }
 
 export default DataAnalyticsService;

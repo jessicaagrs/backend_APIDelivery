@@ -115,6 +115,26 @@ class DataAnalyticsController {
             reply.status(err.statusCode).send(err);
         }
     }
+
+    async getShopmansByOrders(
+        request: FastifyRequest<{ Params: Partial<ParamsType>; Querystring: Partial<ParamsType> }>,
+        reply: FastifyReply
+    ) {
+        try {
+            const queryParams = this.#validateQueryParams(request);
+
+            const result = await service.getShopmansByOrders(
+                queryParams.storeId,
+                queryParams.startDate,
+                queryParams.endDate
+            );
+            reply.send(result);
+        } catch (error: any) {
+            const statusCode = reply.statusCode || 500;
+            const err = new ApiError(statusCode, error.message);
+            reply.status(err.statusCode).send(err);
+        }
+    }
 }
 
 export default DataAnalyticsController;

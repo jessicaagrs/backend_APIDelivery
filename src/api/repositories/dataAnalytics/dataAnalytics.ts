@@ -1,5 +1,5 @@
 import prismaClient from "../../../db/prisma";
-import { CustomersAnalytics, OrderAnalytics } from "../../../types/model/orderModel";
+import { CustomersAnalytics, OrderAnalytics, ShopmansAnalytics } from "../../../types/model/orderModel";
 
 class DataAnalyticsRepository {
     async getOrdersSummaryByPeriod(storeId: string, startDate: Date, endDate: Date) {
@@ -60,6 +60,29 @@ class DataAnalyticsRepository {
         return {
             months: customers.map(row => row.months),
             newCustomers: customers.map(row => row.newCustomers),
+        };
+    }
+
+    async getShopmansByOrders(storeId: string, startDate: Date, endDate: Date) {
+        const shopmans: ShopmansAnalytics[] = await prismaClient.$queryRaw`
+                        SELECT 
+                          TO_CHAR(o."createdAt", 'MM/YYYY') AS "months",
+                          SUM(o."value") AS "totalValues",
+                          COUNT(*) AS "totalOrders",
+                          s."name" AS "shopmans"
+                        FROM "Orders" o
+                          INNER JOIN "Shopmans" s ON s."id" = o."shopmanId"
+                        WHERE o."createdAt" BETWEEN ${startDate}::timestamp AND ${endDate}::timestamp
+                          AND o."storeId" = ${storeId} 
+                        GROUP BY s."name", TO_CHAR(o."createdAt", 'MM/YYYY')
+                        ORDER BY TO_CHAR(o."createdAt", 'MM/YYYY');
+              `;
+
+        return {
+            months: shopmans.map(row => row.months),
+            shopmans: shopmans.map(row => row.shopmans),
+            totalValues: shopmans.map(row => row.totalValues),
+            totalOrders: shopmans.map(row => row.totalOrders),
         };
     }
 }

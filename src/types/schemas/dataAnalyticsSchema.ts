@@ -18,4 +18,16 @@ const DataAnalyticsNewCustomersSchema = Type.Object({
     newCustomers: Type.Array(Type.Number()),
 });
 
-export { DataAnalyticsOrdersByMonthSchema, DataAnalyticsOrdersByStatusSchema, DataAnalyticsNewCustomersSchema };
+const DataAnalyticsShopmansSchema = Type.Object({
+    months: Type.Array(Type.String()),
+    totalValues: Type.Array(Type.Number()),
+    totalOrders: Type.Array(Type.Number()),
+    shopmans: Type.Array(Type.String()),
+});
+
+export {
+    DataAnalyticsNewCustomersSchema,
+    DataAnalyticsOrdersByMonthSchema,
+    DataAnalyticsOrdersByStatusSchema,
+    DataAnalyticsShopmansSchema,
+};
