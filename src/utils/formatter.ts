@@ -79,11 +79,20 @@ function generateRandomPasswordReset() {
     return Math.random().toString(36).slice(-8);
 }
 
+function validateDateByRequest(date: string) {
+    const parsedDate = new Date(date);
+    if (!isNaN(parsedDate.getTime())) {
+        return parsedDate;
+    }
+    return null;
+}
+
 export {
     decryptCustomerPassword,
     encryptCustomerPassword,
     generateRandomPasswordReset,
     validateAcessPassword,
+    validateDateByRequest,
     validateProductType,
     validateRole,
     validateStatusOrders,

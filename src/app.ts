@@ -1,6 +1,7 @@
 import { FastifyInstance, FastifyPluginOptions } from "fastify";
 import { authRoutes } from "./routes/auth/authRoutes";
 import { customersRoutes } from "./routes/customers/customersRoutes";
+import dataAnalyticsRoutes from "./routes/dataAnalytics/dataAnalyticsRoutes";
 import { ordersRoutes } from "./routes/orders/ordersRoutes";
 import { paymentsMethodsRoutes } from "./routes/paymentsMethods/paymentsMethodsRoutes";
 import { productsRoutes } from "./routes/products/productsRoutes";
@@ -17,4 +18,5 @@ export async function routes(fastify: FastifyInstance, options: FastifyPluginOpt
     fastify.register(productsRoutes);
     fastify.register(ordersRoutes);
     fastify.register(productsOrderRoutes);
+    fastify.register(dataAnalyticsRoutes);
 }
