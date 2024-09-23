@@ -32,13 +32,29 @@ class OrdersRepository {
         };
     }
 
-    async getAllOrdersByCustomer(storeId: string, customerId: string) {
-        return await prismaClient.orders.findMany({
+    async getAllOrdersByCustomer(storeId: string, customerId: string, take: number, page: number) {
+        const totalOrders = await prismaClient.orders.count({
             where: {
                 storeId,
                 customerId,
             },
         });
+
+        const skip = (page - 1) * take;
+
+        const orders = await prismaClient.orders.findMany({
+            where: {
+                storeId,
+                customerId,
+            },
+            take,
+            skip,
+        });
+
+        return {
+            totalPages: Math.ceil(totalOrders / take),
+            orders,
+        };
     }
 
     async getOrdersByStoreForStatus(status: string, storeId: string) {

@@ -49,6 +49,46 @@ export async function ordersRoutes(fastify: FastifyInstance, options: FastifyPlu
             await controller.getOrdersByPagination(request, reply);
         }
     );
+
+    fastify.get(
+        "/orders/paginator/:customerId/:storeId/:take/:page",
+        {
+            preValidation: fastify.authenticate,
+            schema: {
+                description: "Returns a list of orders by pagination. Enter the number of pages.",
+                tags: ["orders"],
+                params: {
+                    type: "object",
+                    required: ["customerId", "storeId", "take", "page"],
+                    properties: {
+                        customerId: {
+                            type: "string",
+                        },
+                        storeId: {
+                            type: "string",
+                        },
+                        take: {
+                            type: "string",
+                        },
+                        page: {
+                            type: "string",
+                        },
+                    },
+                },
+                response: {
+                    200: OrderListPagination,
+                    400: ErrorSchema,
+                    401: ErrorSchema,
+                    404: ErrorSchema,
+                    500: ErrorSchema,
+                },
+            },
+        },
+        async (request: FastifyRequest<any>, reply: FastifyReply) => {
+            await controller.getAllOrdersByCustomer(request, reply);
+        }
+    );
+
     fastify.get(
         "/orders/byStore/all/:storeId",
         {
@@ -76,39 +116,6 @@ export async function ordersRoutes(fastify: FastifyInstance, options: FastifyPlu
         },
         async (request: FastifyRequest<any>, reply: FastifyReply) => {
             await controller.getAllOrdersByStore(request, reply);
-        }
-    );
-
-    fastify.get(
-        "/orders/byCustomer/all/:customerId/:storeId",
-        {
-            preValidation: fastify.authenticate,
-            schema: {
-                description: "Returns a list of orders by customer.",
-                params: {
-                    type: "object",
-                    required: ["storeId", "customerId"],
-                    properties: {
-                        storeId: {
-                            type: "string",
-                        },
-                        customerId: {
-                            type: "string",
-                        },
-                    },
-                },
-                tags: ["orders"],
-                response: {
-                    200: OrdersListSchema,
-                    400: ErrorSchema,
-                    401: ErrorSchema,
-                    404: ErrorSchema,
-                    500: ErrorSchema,
-                },
-            },
-        },
-        async (request: FastifyRequest<any>, reply: FastifyReply) => {
-            await controller.getAllOrdersByCustomer(request, reply);
         }
     );
 

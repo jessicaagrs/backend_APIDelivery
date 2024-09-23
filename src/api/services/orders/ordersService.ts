@@ -36,10 +36,19 @@ class OrdersService {
         return orders;
     }
 
-    async getAllOrdersByCustomer(storeId: string | undefined, customerId: string | undefined) {
+    async getAllOrdersByCustomer(
+        storeId: string | undefined,
+        customerId: string | undefined,
+        take: number | undefined,
+        page: number | undefined
+    ) {
         if (storeId == undefined) throw new Error("O Id da loja é obrigatório");
 
         if (customerId == undefined) throw new Error("O Id do cliente é obrigatório");
+
+        if (take === undefined || page === undefined) {
+            throw new Error("Para buscar os pedidos, o número de registros e a página devem ser informados.");
+        }
 
         const storeExist = await storesRepository.getStoreById(storeId);
 
@@ -49,7 +58,7 @@ class OrdersService {
 
         if (!customerExist) throw new Error("Cliente não encontrado");
 
-        return await repository.getAllOrdersByCustomer(storeId, customerId);
+        return await repository.getAllOrdersByCustomer(storeId, customerId, take, page);
     }
 
     async getOrderById(id: string | undefined) {

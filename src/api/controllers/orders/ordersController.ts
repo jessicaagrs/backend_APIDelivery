@@ -123,8 +123,8 @@ class OrdersController {
 
     async getAllOrdersByCustomer(request: FastifyRequest, reply: FastifyReply) {
         try {
-            const { storeId, customerId } = paramsSchema.partial().parse(request.params);
-            const orders = await service.getAllOrdersByCustomer(storeId, customerId);
+            const { storeId, customerId, take, page } = paramsSchema.partial().parse(request.params);
+            const orders = await service.getAllOrdersByCustomer(storeId, customerId, take, page);
             return reply.send(orders);
         } catch (error: any) {
             const statusCode = reply.statusCode || 500;
